@@ -1,16 +1,70 @@
 package com.socialmediaapp.serviceimpl;
 
+
+import com.socialmediaapp.exception.RequestParamException;
+import com.socialmediaapp.exception.UserAlreadyExistsException;
+import com.socialmediaapp.exception.UserDoesNotExistsException;
+import com.socialmediaapp.model.UserModel;
+import org.junit.Assert;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.InjectMocks;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 public class SocialMediaAppServiceImplTest {
-//    @InjectMocks
-//    private SocialMediaAppServiceImpl socialMediaAppService;
+    @InjectMocks
+    SocialMediaAppServiceImpl socialMediaAppService;
 
-//    @Test
-//    public void createUserTest(){
-//        socialMediaAppService.createUser(1,"Atul");
-//
-//    }
+
+    @Test
+    public void createUsersTest() {
+        ResponseEntity entityUser = socialMediaAppService.createUser(1, "atul");
+        UserModel user = (UserModel) entityUser.getBody();
+        Assert.assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
+        Assert.assertEquals("atul", user.getUserName());
+    }
+
+    @Test(expected = RequestParamException.class)
+    public void createUsersRequestParamExceptionTest() {
+        ResponseEntity entityUser = socialMediaAppService.createUser(-1, "atul");
+        Assert.assertEquals(HttpStatus.BAD_REQUEST, entityUser.getStatusCodeValue());
+    }
+
+    @Test(expected = UserAlreadyExistsException.class)
+    public void createUsersUserAlreadyExistsExceptionTest() {
+        ResponseEntity entityUser = socialMediaAppService.createUser(1, "atul");
+        Assert.assertEquals(HttpStatus.CONFLICT, entityUser.getStatusCodeValue());
+    }
+
+    @Test
+    public void getAllUsersTest() {
+        socialMediaAppService.createUser(2, "atul");
+        ResponseEntity entityUser = socialMediaAppService.getAllUsers();
+        Assert.assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
+    }
+
+    @Test
+    public void createNewPostTest() {
+        socialMediaAppService.createUser(3, "atul");
+        ResponseEntity entityUser = socialMediaAppService.createNewPost(3, "Comment Post");
+        Assert.assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
+    }
+
+    @Test(expected = RequestParamException.class)
+    public void createNewPostRequestParamExceptionTest() {
+
+        ResponseEntity entityUser = socialMediaAppService.createNewPost(-3, "Comment Post");
+        Assert.assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
+    }
+
+    @Test(expected = UserDoesNotExistsException.class)
+    public void createNewPostUserDoesNotExistsExceptionTest() {
+        ResponseEntity entityUser = socialMediaAppService.createNewPost(4, "Comment Post");
+        Assert.assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
+    }
+
+
 }

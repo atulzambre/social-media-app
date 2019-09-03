@@ -1,7 +1,14 @@
-com/socialmediaapp/controller/SocialMediaAppController.class
 com/socialmediaapp/serviceimpl/SocialMediaAppServiceImpl.class
+com/socialmediaapp/model/ErrorMessageConstantModel.class
+com/socialmediaapp/exception/UserAlreadyExistsException.class
+com/socialmediaapp/model/ErrorResponseModel.class
+com/socialmediaapp/model/ErrorResponseModel$ErrorResponseExceptionBuilder.class
+com/socialmediaapp/model/UserModel.class
+com/socialmediaapp/exception/UserDoesNotExistsException.class
+com/socialmediaapp/controller/SocialMediaAppController.class
+com/socialmediaapp/exception/SocialMediaAppExceptionHandler.class
 com/socialmediaapp/model/FollowModel.class
 com/socialmediaapp/model/PostModel.class
-com/socialmediaapp/model/UserModel.class
 com/socialmediaapp/SpringBootApplicationMain.class
+com/socialmediaapp/exception/RequestParamException.class
 com/socialmediaapp/service/SocialMediaAppService.class

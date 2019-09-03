@@ -26,7 +26,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         UserModel user = new UserModel();
 
         try {
-            if (userID <= 0 ||userName == null || userName.isEmpty())
+            if (userID <= 0 || userName == null || userName.isEmpty())
                 throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
             user.setUserID(userID);
             user.setUserName(userName);
@@ -64,7 +64,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
         UserModel user;
         try {
-            if(userID<=0||postContent.isEmpty())
+            if (userID <= 0 || postContent.isEmpty())
                 throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
             newPost.setPostContent(postContent);
             user = userList.parallelStream().filter(s -> s.getUserID() == userID).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
@@ -83,8 +83,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         } catch (RequestParamException e) {
             System.out.println(e.getStackTrace());
             throw new RequestParamException(e.getMessage());
-        }
-        catch(UserDoesNotExistsException e){
+        } catch (UserDoesNotExistsException e) {
             throw new UserDoesNotExistsException(e.getMessage());
         }
         return new ResponseEntity(user, HttpStatus.OK);
@@ -97,8 +96,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         try {
             if (followeeId == followerId) {
                 throw new RequestParamException(ErrorMessageConstantModel.CAN_NOT_FOLLOW_SELF);
-            }
-            else if (followeeId<=0||followerId<=0){
+            } else if (followeeId <= 0 || followerId <= 0) {
                 throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
             }
             followerModel = userList.parallelStream().filter(s -> s.getUserID() == followerId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWER_DOES_NOT_EXISTS));
@@ -119,8 +117,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         } catch (RequestParamException e) {
             System.out.println(e.getStackTrace());
             throw new RequestParamException(e.getMessage());
-        }
-        catch(UserDoesNotExistsException e){
+        } catch (UserDoesNotExistsException e) {
             System.out.println(e.getStackTrace());
             throw new UserDoesNotExistsException(e.getMessage());
         }
@@ -135,8 +132,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         try {
             if (followeeId == followerId) {
                 throw new RequestParamException(ErrorMessageConstantModel.CAN_NOT_UNFOLLOW_SELF);
-            }
-            else if (followeeId<=0||followerId<=0){
+            } else if (followeeId <= 0 || followerId <= 0) {
                 throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
             }
 
@@ -151,8 +147,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         } catch (RequestParamException e) {
             System.out.println(e.getStackTrace());
             throw new RequestParamException(e.getMessage());
-        }
-        catch(UserDoesNotExistsException e){
+        } catch (UserDoesNotExistsException e) {
             System.out.println(e.getStackTrace());
             throw new UserDoesNotExistsException(e.getMessage());
         }
@@ -164,7 +159,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         UserModel userModel;
         List<PostModel> newsFeedModel = new ArrayList<>();
         try {
-            if(userID<=0){
+            if (userID <= 0) {
                 throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
             }
             userModel = userList.parallelStream().filter(s -> s.getUserID() == userID).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
@@ -175,8 +170,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         } catch (RequestParamException e) {
             System.out.println(e.getStackTrace());
             throw new RequestParamException(e.getMessage());
-        }
-        catch(UserDoesNotExistsException e){
+        } catch (UserDoesNotExistsException e) {
             System.out.println(e.getStackTrace());
             throw new UserDoesNotExistsException(e.getMessage());
         }
