@@ -15,6 +15,7 @@ public class SocialMediaAppController {
 
     @GetMapping("ping")
     public String getPing() {
+
         return "Social Media App is working.";
     }
 

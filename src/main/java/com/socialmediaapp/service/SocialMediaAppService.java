@@ -2,8 +2,6 @@ package com.socialmediaapp.service;
 
 import org.springframework.http.ResponseEntity;
 
-import javax.xml.ws.Response;
-
 public interface SocialMediaAppService {
 
     public ResponseEntity createUser(int userID, String userName);
