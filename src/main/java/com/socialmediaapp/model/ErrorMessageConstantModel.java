@@ -13,5 +13,9 @@ public class ErrorMessageConstantModel {
 
     public static final String CAN_NOT_FOLLOW_SELF = "You Can Not Follow Yourself.";
 
+    public static final String CAN_NOT_UNFOLLOW_SELF = "You Can Not UnFollow Yourself.";
+
     public static final String ALREADY_FOLLOWING = "Already Following The User.";
+
+    public static final String NOT_FOLLOWING_USER = "You Are Not Following This User.";
 }

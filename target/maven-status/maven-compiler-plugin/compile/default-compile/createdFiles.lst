@@ -1,0 +1,7 @@
+com/socialmediaapp/controller/SocialMediaAppController.class
+com/socialmediaapp/serviceimpl/SocialMediaAppServiceImpl.class
+com/socialmediaapp/model/FollowModel.class
+com/socialmediaapp/model/PostModel.class
+com/socialmediaapp/model/UserModel.class
+com/socialmediaapp/SpringBootApplicationMain.class
+com/socialmediaapp/service/SocialMediaAppService.class

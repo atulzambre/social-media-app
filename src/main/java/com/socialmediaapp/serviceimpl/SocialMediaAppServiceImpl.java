@@ -26,7 +26,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         UserModel user = new UserModel();
 
         try {
-            if (userID == 0 || userName == null || userName.isEmpty())
+            if (userID <= 0 ||userName == null || userName.isEmpty())
                 throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
             user.setUserID(userID);
             user.setUserName(userName);
@@ -40,6 +40,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         } catch (UserAlreadyExistsException e) {
             throw new UserAlreadyExistsException(e.getMessage());
         }
+
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -63,7 +64,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
         UserModel user;
         try {
-            if(userID==0||postContent.isEmpty())
+            if(userID<=0||postContent.isEmpty())
                 throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
             newPost.setPostContent(postContent);
             user = userList.parallelStream().filter(s -> s.getUserID() == userID).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
@@ -94,8 +95,11 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         UserModel followerModel;
         UserModel followeeModel;
         try {
-            if (followeeId == followerId||followeeId==0||followerId==0) {
+            if (followeeId == followerId) {
                 throw new RequestParamException(ErrorMessageConstantModel.CAN_NOT_FOLLOW_SELF);
+            }
+            else if (followeeId<=0||followerId<=0){
+                throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
             }
             followerModel = userList.parallelStream().filter(s -> s.getUserID() == followerId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWER_DOES_NOT_EXISTS));
             followeeModel = userList.parallelStream().filter(s -> s.getUserID() == followeeId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWEE_DOES_NOT_EXISTS));
@@ -130,19 +134,27 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
         try {
             if (followeeId == followerId) {
-                throw new Exception("Can not unfollow self.");
+                throw new RequestParamException(ErrorMessageConstantModel.CAN_NOT_UNFOLLOW_SELF);
             }
-            followerModel = userList.parallelStream().filter(s -> s.getUserID() == followerId).findFirst().orElseThrow(() -> new Exception("No Such Follower Available"));
-            followeeModel = userList.parallelStream().filter(s -> s.getUserID() == followeeId).findFirst().orElseThrow(() -> new Exception("No Such Followee Available"));
+            else if (followeeId<=0||followerId<=0){
+                throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
+            }
+
+            followerModel = userList.parallelStream().filter(s -> s.getUserID() == followerId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWER_DOES_NOT_EXISTS));
+            followeeModel = userList.parallelStream().filter(s -> s.getUserID() == followeeId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWEE_DOES_NOT_EXISTS));
 
             if (followerModel.getFollowee().parallelStream().anyMatch(s -> s.getFolloweeId() == followeeModel.getUserID())) {
                 followerModel.getFollowee().removeIf(s -> s.getFolloweeId() == followeeModel.getUserID());
             } else {
-                throw new Exception("You are not following this user.");
+                throw new RequestParamException(ErrorMessageConstantModel.NOT_FOLLOWING_USER);
             }
-        } catch (Exception e) {
+        } catch (RequestParamException e) {
             System.out.println(e.getStackTrace());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            throw new RequestParamException(e.getMessage());
+        }
+        catch(UserDoesNotExistsException e){
+            System.out.println(e.getStackTrace());
+            throw new UserDoesNotExistsException(e.getMessage());
         }
         return new ResponseEntity(followerModel, HttpStatus.OK);
     }
@@ -152,14 +164,21 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         UserModel userModel;
         List<PostModel> newsFeedModel = new ArrayList<>();
         try {
-            userModel = userList.parallelStream().filter(s -> s.getUserID() == userID).findFirst().orElseThrow(() -> new Exception("User Not Exists"));
+            if(userID<=0){
+                throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
+            }
+            userModel = userList.parallelStream().filter(s -> s.getUserID() == userID).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
             if (userModel.getPosts() != null)
                 newsFeedModel = userModel.getPosts();
 
 
-        } catch (Exception e) {
+        } catch (RequestParamException e) {
             System.out.println(e.getStackTrace());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            throw new RequestParamException(e.getMessage());
+        }
+        catch(UserDoesNotExistsException e){
+            System.out.println(e.getStackTrace());
+            throw new UserDoesNotExistsException(e.getMessage());
         }
         return new ResponseEntity(newsFeedModel, HttpStatus.OK);
     }
