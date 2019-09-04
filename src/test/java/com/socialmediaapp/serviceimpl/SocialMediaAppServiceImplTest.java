@@ -50,29 +50,29 @@ public class SocialMediaAppServiceImplTest {
     @Test
     public void createNewPostTest() {
         socialMediaAppService.createUser(3, "atul");
-        ResponseEntity entityUser = socialMediaAppService.createNewPost(3, "Comment Post");
+        ResponseEntity entityUser = socialMediaAppService.createNewPost(3, 4,"Comment Post");
         Assert.assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
     }
 
     @Test(expected = RequestParamException.class)
     public void createNewPostRequestParamExceptionTest() {
 
-        ResponseEntity entityUser = socialMediaAppService.createNewPost(-3, "Comment Post");
+        ResponseEntity entityUser = socialMediaAppService.createNewPost(-3,2, "Comment Post");
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
     }
 
     @Test(expected = UserDoesNotExistsException.class)
     public void createNewPostUserDoesNotExistsExceptionTest() {
-        ResponseEntity entityUser = socialMediaAppService.createNewPost(4, "Comment Post");
+        ResponseEntity entityUser = socialMediaAppService.createNewPost(4, 2,"Comment Post");
         Assert.assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
     }
 
-    @Test
+    @Test(expected = RequestParamException.class)
     public void createNewPostElseExceptionTest() {
         socialMediaAppService.createUser(4, "atul");
-        socialMediaAppService.createNewPost(4, "Comment Post");
-        ResponseEntity entityUser = socialMediaAppService.createNewPost(4, "Comment Post");
-        Assert.assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
+        socialMediaAppService.createNewPost(4, 2,"Comment Post");
+        ResponseEntity entityUser = socialMediaAppService.createNewPost(4, 2,"Comment Post");
+        Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
     }
 
     @Test(expected = RequestParamException.class)
@@ -137,9 +137,9 @@ public class SocialMediaAppServiceImplTest {
     @Test
     public void getNewsFeedTest() {
         socialMediaAppService.createUser(5, "test");
-        socialMediaAppService.createNewPost(5, "test post");
+        socialMediaAppService.createNewPost(5, 1,"test post");
         socialMediaAppService.createUser(6, "test");
-        socialMediaAppService.createNewPost(6, "test post");
+        socialMediaAppService.createNewPost(6, 1,"test post");
         socialMediaAppService.follow(5, 6);
         ResponseEntity entityUser = socialMediaAppService.getNewsFeed(5);
         Assert.assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());

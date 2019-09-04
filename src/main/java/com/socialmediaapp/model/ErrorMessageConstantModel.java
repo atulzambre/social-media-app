@@ -23,6 +23,8 @@ public class ErrorMessageConstantModel {
 
     public static final String POSTS_NOT_AVAILABLE = "No Posts To Show.";
 
+    public static final String POST_ALREADY_EXISTS = "Post Already Exists.";
+
 
     private ErrorMessageConstantModel() {
     }

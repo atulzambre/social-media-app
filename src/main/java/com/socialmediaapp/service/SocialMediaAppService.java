@@ -8,7 +8,7 @@ public interface SocialMediaAppService {
 
     public ResponseEntity getAllUsers();
 
-    public ResponseEntity createNewPost(int userID, String postContent);
+    public ResponseEntity createNewPost(int userID, int postID,String postContent);
 
     public ResponseEntity follow(int followerId, int followeeId);
 

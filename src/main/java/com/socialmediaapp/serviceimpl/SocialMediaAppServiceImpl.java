@@ -22,8 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class SocialMediaAppServiceImpl implements SocialMediaAppService {
-    public static List<UserModel> userList = new ArrayList<UserModel>();
-    private Integer postCount = 0;
+    public static List<UserModel> userList = new ArrayList<UserModel>(5);
 
     public ResponseEntity createUser(int userID, String userName) {
 
@@ -63,23 +62,25 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     }
 
     @Override
-    public ResponseEntity createNewPost(int userID, String postContent) {
+    public ResponseEntity createNewPost(int userID,int postID, String postContent) {
         PostModel newPost = new PostModel();
 
         UserModel user;
         try {
-            if (userID <= 0 || postContent.isEmpty())
+            if (userID <= 0 ||postID<=0 || postContent.isEmpty())
                 throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
+
             newPost.setPostContent(postContent);
             user = userList.parallelStream().filter(s -> s.getUserID() == userID).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
-            postCount++;
-            newPost.setPostID(postCount);
+            newPost.setPostID(postID);
             newPost.setPostCreated(LocalDateTime.now());
             if (Objects.isNull(user.getPosts())) {
                 List<PostModel> postModels = new ArrayList<>();
                 postModels.add(newPost);
                 user.setPosts(postModels);
             } else {
+                if(user.getPosts().parallelStream().anyMatch(s->s.getPostID()==postID))
+                    throw new RequestParamException(ErrorMessageConstantModel.POST_ALREADY_EXISTS);
                 user.getPosts().add(newPost);
             }
 
@@ -160,19 +161,20 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
     @Override
     public ResponseEntity getNewsFeed(int userID) {
-        UserModel userModel;
-        List<PostModel> newsFeedModel = new ArrayList<>();
+        UserModel userModel=null;
+        List<UserModel> checkList=new ArrayList<>(userList);
+        List<PostModel> newsFeedModel = null;
         try {
             if (userID <= 0) {
                 throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
             }
-            userModel = userList.parallelStream().filter(s -> s.getUserID() == userID).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
+            userModel = checkList.parallelStream().filter(s -> s.getUserID() == userID).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
             if (Objects.nonNull(userModel.getPosts()))
-                newsFeedModel = userModel.getPosts();
+                newsFeedModel = new ArrayList<>(userModel.getPosts());
 
             if (Objects.nonNull(userModel.getFollowee())) {
                 for (FollowModel followModel : userModel.getFollowee()) {
-                    for (UserModel userModel1 : userList) {
+                    for (UserModel userModel1 : checkList) {
                         if (followModel.getFolloweeId() == userModel1.getUserID() && Objects.nonNull(userModel1.getPosts())) {
                             newsFeedModel.addAll(userModel1.getPosts());
                         }
@@ -181,7 +183,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
                 }
             }
-            if (newsFeedModel.isEmpty()) {
+            if (Objects.isNull(newsFeedModel)||newsFeedModel.isEmpty()) {
                 throw new PostsNotAvailableException(ErrorMessageConstantModel.POSTS_NOT_AVAILABLE);
             }
             Collections.sort(newsFeedModel);

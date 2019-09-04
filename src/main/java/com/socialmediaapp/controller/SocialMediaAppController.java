@@ -1,11 +1,13 @@
 package com.socialmediaapp.controller;
 
+import com.socialmediaapp.model.CreatePostRequestModel;
+import com.socialmediaapp.model.FollowUnFollowRequestModel;
+import com.socialmediaapp.model.UserModel;
 import com.socialmediaapp.service.SocialMediaAppService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SocialMediaAppController {
@@ -18,14 +20,14 @@ public class SocialMediaAppController {
         return socialMediaAppService.getAllUsers();
     }
 
-    @GetMapping("createUser")
-    public ResponseEntity createUser(@RequestParam("userID") int userID, @RequestParam("userName") String userName) {
-        return socialMediaAppService.createUser(userID, userName);
+    @PostMapping("createUser")
+    public ResponseEntity createUser(@RequestBody UserModel userRequest) {
+        return socialMediaAppService.createUser(userRequest.getUserID(), userRequest.getUserName());
     }
 
-    @GetMapping("createNewPost")
-    public ResponseEntity createNewPost(@RequestParam("userID") int userID, @RequestParam("postContent") String postContent) {
-        return socialMediaAppService.createNewPost(userID, postContent);
+    @PostMapping(value = "createNewPost",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity createNewPost(@RequestBody CreatePostRequestModel postRequestModel) {
+        return socialMediaAppService.createNewPost(postRequestModel.getUserID(),postRequestModel.getPostID(),postRequestModel.getPostContent());
     }
 
     @GetMapping("getNewsFeed")
@@ -33,14 +35,14 @@ public class SocialMediaAppController {
         return socialMediaAppService.getNewsFeed(userID);
     }
 
-    @GetMapping("follow")
-    public ResponseEntity follow(@RequestParam("followerId") int followerId, @RequestParam("followeeId") int followeeId) {
-        return socialMediaAppService.follow(followerId, followeeId);
+    @PostMapping(value="follow",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity follow(@RequestBody FollowUnFollowRequestModel followRequestModel) {
+        return socialMediaAppService.follow(followRequestModel.getFollowerId(), followRequestModel.getFolloweeId());
     }
 
-    @GetMapping("unfollow")
-    public ResponseEntity unFollow(@RequestParam("followerId") int followerId, @RequestParam("followeeId") int followeeId) {
-        return socialMediaAppService.unFollow(followerId, followeeId);
+    @PostMapping(value="unfollow",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity unFollow(@RequestBody FollowUnFollowRequestModel unFollowRequestModel) {
+        return socialMediaAppService.unFollow(unFollowRequestModel.getFollowerId(), unFollowRequestModel.getFolloweeId());
     }
 
 }
