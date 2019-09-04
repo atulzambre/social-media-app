@@ -27,7 +27,12 @@ import java.util.stream.Collectors;
 @Service
 public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     //    Created static volatile for thread safe userList collection to store the User related data.
-    private static volatile CopyOnWriteArrayList<UserModel> userCollectionDatabase = new CopyOnWriteArrayList<>();
+    //Size of array is small
+    private static final CopyOnWriteArrayList<UserModel> userCollectionDatabase = new CopyOnWriteArrayList<>();
+
+    //Size of collection is large
+    //private static final List<UserModel> userCollectionDatabase = Collections.synchronizedList(new ArrayList<>());
+
 
 
     /**
@@ -54,7 +59,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             if (!userCollectionDatabase.isEmpty() && userCollectionDatabase.stream().anyMatch(s -> s.getUserId() == newUser.getUserId())) {
                 throw new UserAlreadyExistsException(ErrorMessageConstantModel.USER_ALREADY_EXISTS);
             } else {
-                //Thread Safe - use use threads else remove the syncronized
+                //Thread Safe - if use threads else remove the syncronized
                 synchronized (this){
                     userCollectionDatabase.add(newUser);
                 }
