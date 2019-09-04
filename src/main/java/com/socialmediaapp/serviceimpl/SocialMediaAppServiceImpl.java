@@ -41,7 +41,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             throw new UserAlreadyExistsException(e.getMessage());
         }
         ResponseEntity<UserModel> response;
-        response=new ResponseEntity<>(user, HttpStatus.OK);
+        response = new ResponseEntity<>(user, HttpStatus.OK);
         return response;
     }
 
@@ -56,7 +56,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             throw new UserDoesNotExistsException(e.getMessage());
         }
         ResponseEntity<List<UserModel>> response;
-        response=new ResponseEntity<>(userList, HttpStatus.OK);
+        response = new ResponseEntity<>(userList, HttpStatus.OK);
         return response;
     }
 

@@ -41,7 +41,7 @@ public class SocialMediaAppControllerTest {
         userModel.setUserID(1);
         userModel.setUserName("test");
         ResponseEntity<UserModel> responseEntity;
-        responseEntity = new ResponseEntity<>(userModel,HttpStatus.OK);
+        responseEntity = new ResponseEntity<>(userModel, HttpStatus.OK);
         Mockito.when(socialMediaAppService.getAllUsers()).thenReturn(responseEntity);
         mvc.perform(MockMvcRequestBuilders.get("/getAllUsers").accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
     }
@@ -52,7 +52,7 @@ public class SocialMediaAppControllerTest {
         userModel.setUserID(1);
         userModel.setUserName("test");
         ResponseEntity<UserModel> responseEntity;
-        responseEntity = new ResponseEntity<>(userModel,HttpStatus.OK);
+        responseEntity = new ResponseEntity<>(userModel, HttpStatus.OK);
         Mockito.when(socialMediaAppService.createUser(1, "test")).thenReturn(responseEntity);
         mvc.perform(post("/createUser")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -75,7 +75,7 @@ public class SocialMediaAppControllerTest {
         createPostRequestModel.setPostID(1);
         createPostRequestModel.setPostContent("Test");
         ResponseEntity<UserModel> responseEntity;
-        responseEntity = new ResponseEntity<>(userModel,HttpStatus.OK);
+        responseEntity = new ResponseEntity<>(userModel, HttpStatus.OK);
         Mockito.when(socialMediaAppService.createNewPost(1, 1, "test")).thenReturn(responseEntity);
         mvc.perform(post("/createNewPost")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -91,7 +91,7 @@ public class SocialMediaAppControllerTest {
         postModel.setPostContent("test");
         List<PostModel> postModelList = Collections.singletonList(postModel);
         ResponseEntity<List<PostModel>> responseEntity;
-        responseEntity = new ResponseEntity<>(postModelList,HttpStatus.OK);
+        responseEntity = new ResponseEntity<>(postModelList, HttpStatus.OK);
         Mockito.when(socialMediaAppService.getNewsFeed(1)).thenReturn(responseEntity);
         mvc.perform(MockMvcRequestBuilders.get("/getNewsFeed?userID=1").accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
     }
@@ -105,7 +105,7 @@ public class SocialMediaAppControllerTest {
         followRequestModel.setFollowerId(1);
         followRequestModel.setFolloweeId(2);
         ResponseEntity<UserModel> responseEntity;
-        responseEntity = new ResponseEntity<>(userModel,HttpStatus.OK);
+        responseEntity = new ResponseEntity<>(userModel, HttpStatus.OK);
         Mockito.when(socialMediaAppService.follow(1, 2)).thenReturn(responseEntity);
         mvc.perform(post("/follow")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -122,7 +122,7 @@ public class SocialMediaAppControllerTest {
         unfollowRequestModel.setFollowerId(1);
         unfollowRequestModel.setFolloweeId(2);
         ResponseEntity<UserModel> responseEntity;
-        responseEntity = new ResponseEntity<>(userModel,HttpStatus.OK);
+        responseEntity = new ResponseEntity<>(userModel, HttpStatus.OK);
         Mockito.when(socialMediaAppService.follow(1, 2)).thenReturn(responseEntity);
         mvc.perform(post("/unfollow")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -49,10 +49,11 @@ public class ErrorResponseModel {
     }
 
     public static class ErrorResponseExceptionBuilder {
-        private LocalDateTime timestamp;
         private final int status;
+        private LocalDateTime timestamp;
         private String error;
         private String message;
+
         public ErrorResponseExceptionBuilder(int status) {
             this.status = status;
         }
