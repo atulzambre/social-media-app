@@ -4,17 +4,17 @@ import org.springframework.http.ResponseEntity;
 
 public interface SocialMediaAppService {
 
-    public ResponseEntity createUser(int userID, String userName);
+     ResponseEntity createUser(int userID, String userName);
 
-    public ResponseEntity getAllUsers();
+     ResponseEntity getAllUsers();
 
-    public ResponseEntity createNewPost(int userID, int postID, String postContent);
+     ResponseEntity createNewPost(int userID, int postID, String postContent);
 
-    public ResponseEntity follow(int followerId, int followeeId);
+     ResponseEntity follow(int followerId, int followeeId);
 
-    public ResponseEntity unFollow(int followerId, int followeeId);
+     ResponseEntity unFollow(int followerId, int followeeId);
 
-    public ResponseEntity getNewsFeed(int userID);
+     ResponseEntity getNewsFeed(int userID);
 
 
 }

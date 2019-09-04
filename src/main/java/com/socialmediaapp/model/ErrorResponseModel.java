@@ -9,7 +9,7 @@ public class ErrorResponseModel {
     private String error;
     private String message;
 
-    public ErrorResponseModel(ErrorResponseExceptionBuilder errorResponseExceptionBuilder) {
+    private ErrorResponseModel(ErrorResponseExceptionBuilder errorResponseExceptionBuilder) {
         this.error = errorResponseExceptionBuilder.error;
         this.message = errorResponseExceptionBuilder.message;
         this.status = errorResponseExceptionBuilder.status;
@@ -50,10 +50,9 @@ public class ErrorResponseModel {
 
     public static class ErrorResponseExceptionBuilder {
         private LocalDateTime timestamp;
-        private int status;
+        private final int status;
         private String error;
         private String message;
-
         public ErrorResponseExceptionBuilder(int status) {
             this.status = status;
         }
@@ -74,8 +73,7 @@ public class ErrorResponseModel {
         }
 
         public ErrorResponseModel build() {
-            ErrorResponseModel errorResponseModel = new ErrorResponseModel(this);
-            return errorResponseModel;
+            return new ErrorResponseModel(this);
         }
     }
 }

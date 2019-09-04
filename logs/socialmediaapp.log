@@ -1,5 +1,0 @@
-2019-09-04 01:02:01,868 INFO com.socialmediaapp.SpringBootApplicationMain [main] Starting SpringBootApplicationMain on Atuls-MacBook-Pro.local with PID 3808 (/Users/atulzambre/IdeaProjects/social-media-app/target/classes started by atulzambre in /Users/atulzambre/IdeaProjects/social-media-app)
-2019-09-04 01:02:01,869 DEBUG com.socialmediaapp.SpringBootApplicationMain [main] Running with Spring Boot v2.1.7.RELEASE, Spring v5.1.9.RELEASE
-2019-09-04 01:02:01,870 INFO com.socialmediaapp.SpringBootApplicationMain [main] No active profile set, falling back to default profiles: default
-2019-09-04 01:02:03,212 INFO com.socialmediaapp.SpringBootApplicationMain [main] Started SpringBootApplicationMain in 1.623 seconds (JVM running for 2.039)
-2019-09-04 01:02:11,520 DEBUG com.socialmediaapp.controller.SocialMediaAppController [http-nio-9999-exec-2] Ping Called

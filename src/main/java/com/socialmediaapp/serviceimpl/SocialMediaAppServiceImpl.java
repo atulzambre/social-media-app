@@ -14,15 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class SocialMediaAppServiceImpl implements SocialMediaAppService {
-    public static List<UserModel> userList = new ArrayList<UserModel>(5);
+    private static final List<UserModel> userList = new ArrayList<>(5);
 
     public ResponseEntity createUser(int userID, String userName) {
 
@@ -43,9 +40,9 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         } catch (UserAlreadyExistsException e) {
             throw new UserAlreadyExistsException(e.getMessage());
         }
-
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        ResponseEntity<UserModel> response;
+        response=new ResponseEntity<>(user, HttpStatus.OK);
+        return response;
     }
 
     @Override
@@ -55,10 +52,12 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
                 throw new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
             }
         } catch (UserDoesNotExistsException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             throw new UserDoesNotExistsException(e.getMessage());
         }
-        return new ResponseEntity(userList, HttpStatus.OK);
+        ResponseEntity<List<UserModel>> response;
+        response=new ResponseEntity<>(userList, HttpStatus.OK);
+        return response;
     }
 
     @Override
@@ -86,12 +85,14 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
 
         } catch (RequestParamException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             throw new RequestParamException(e.getMessage());
         } catch (UserDoesNotExistsException e) {
             throw new UserDoesNotExistsException(e.getMessage());
         }
-        return new ResponseEntity(user, HttpStatus.OK);
+        ResponseEntity<UserModel> response;
+        response = new ResponseEntity<>(user, HttpStatus.OK);
+        return response;
     }
 
     @Override
@@ -120,13 +121,15 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             }
 
         } catch (RequestParamException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             throw new RequestParamException(e.getMessage());
         } catch (UserDoesNotExistsException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             throw new UserDoesNotExistsException(e.getMessage());
         }
-        return new ResponseEntity(followerModel, HttpStatus.OK);
+        ResponseEntity<UserModel> response;
+        response = new ResponseEntity<>(followerModel, HttpStatus.OK);
+        return response;
     }
 
     @Override
@@ -150,18 +153,20 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
                 throw new RequestParamException(ErrorMessageConstantModel.NOT_FOLLOWING_USER);
             }
         } catch (RequestParamException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             throw new RequestParamException(e.getMessage());
         } catch (UserDoesNotExistsException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             throw new UserDoesNotExistsException(e.getMessage());
         }
-        return new ResponseEntity(followerModel, HttpStatus.OK);
+        ResponseEntity<UserModel> response;
+        response = new ResponseEntity<>(followerModel, HttpStatus.OK);
+        return response;
     }
 
     @Override
     public ResponseEntity getNewsFeed(int userID) {
-        UserModel userModel = null;
+        UserModel userModel;
         List<UserModel> checkList = new ArrayList<>(userList);
         List<PostModel> newsFeedModel = null;
         try {
@@ -190,16 +195,17 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
 
         } catch (RequestParamException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             throw new RequestParamException(e.getMessage());
         } catch (UserDoesNotExistsException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             throw new UserDoesNotExistsException(e.getMessage());
         } catch (PostsNotAvailableException e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
             throw new PostsNotAvailableException(e.getMessage());
         }
-
-        return new ResponseEntity(newsFeedModel.stream().limit(20).collect(Collectors.toList()), HttpStatus.OK);
+        ResponseEntity response;
+        response = new ResponseEntity(newsFeedModel.stream().limit(20).collect(Collectors.toList()), HttpStatus.OK);
+        return response;
     }
 }
