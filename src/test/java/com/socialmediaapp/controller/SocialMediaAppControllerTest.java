@@ -43,7 +43,7 @@ public class SocialMediaAppControllerTest {
     @Test
     public void getAllUsersTest() throws Exception {
         UserModel userModel = new UserModel();
-        userModel.setUserID(1);
+        userModel.setUserId(1);
         userModel.setUserName("test");
         ResponseEntity<UserModel> responseEntity;
         responseEntity = new ResponseEntity<>(userModel, HttpStatus.OK);
@@ -54,7 +54,7 @@ public class SocialMediaAppControllerTest {
     @Test
     public void createUserTest() throws Exception {
         UserModel userModel = new UserModel();
-        userModel.setUserID(1);
+        userModel.setUserId(1);
         userModel.setUserName("test");
         ResponseEntity<UserModel> responseEntity;
         responseEntity = new ResponseEntity<>(userModel, HttpStatus.OK);
@@ -69,15 +69,15 @@ public class SocialMediaAppControllerTest {
     @Test
     public void createNewPostTest() throws Exception {
         UserModel userModel = new UserModel();
-        userModel.setUserID(1);
+        userModel.setUserId(1);
         userModel.setUserName("test");
         PostModel postModel = new PostModel();
-        postModel.setPostID(1);
+        postModel.setPostId(1);
         postModel.setPostContent("test");
         userModel.setPosts(Collections.singletonList(postModel));
         CreatePostRequestModel createPostRequestModel = new CreatePostRequestModel();
-        createPostRequestModel.setUserID(1);
-        createPostRequestModel.setPostID(1);
+        createPostRequestModel.setUserId(1);
+        createPostRequestModel.setPostId(1);
         createPostRequestModel.setPostContent("Test");
         ResponseEntity<UserModel> responseEntity;
         responseEntity = new ResponseEntity<>(userModel, HttpStatus.OK);
@@ -92,19 +92,19 @@ public class SocialMediaAppControllerTest {
     public void getNewsFeedTest() throws Exception {
 
         PostModel postModel = new PostModel();
-        postModel.setPostID(1);
+        postModel.setPostId(1);
         postModel.setPostContent("test");
         List<PostModel> postModelList = Collections.singletonList(postModel);
         ResponseEntity<List<PostModel>> responseEntity;
         responseEntity = new ResponseEntity<>(postModelList, HttpStatus.OK);
         Mockito.when(socialMediaAppService.getNewsFeed(1)).thenReturn(responseEntity);
-        mvc.perform(MockMvcRequestBuilders.get("/getNewsFeed?userID=1").accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+        mvc.perform(MockMvcRequestBuilders.get("/getNewsFeed?userId=1").accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
     }
 
     @Test
     public void followTest() throws Exception {
         UserModel userModel = new UserModel();
-        userModel.setUserID(1);
+        userModel.setUserId(1);
         userModel.setUserName("test");
         FollowUnFollowRequestModel followRequestModel = new FollowUnFollowRequestModel();
         followRequestModel.setFollowerId(1);
@@ -121,7 +121,7 @@ public class SocialMediaAppControllerTest {
     @Test
     public void unFollowTest() throws Exception {
         UserModel userModel = new UserModel();
-        userModel.setUserID(1);
+        userModel.setUserId(1);
         userModel.setUserName("test");
         FollowUnFollowRequestModel unfollowRequestModel = new FollowUnFollowRequestModel();
         unfollowRequestModel.setFollowerId(1);
