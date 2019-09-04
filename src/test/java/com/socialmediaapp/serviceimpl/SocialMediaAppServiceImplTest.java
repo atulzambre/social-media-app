@@ -77,32 +77,30 @@ public class SocialMediaAppServiceImplTest {
     @Test(expected = RequestParamException.class)
     public void followRequestParamExceptionTest() {
 
-        ResponseEntity entityUser = socialMediaAppService.follow(1,1);
+        ResponseEntity entityUser = socialMediaAppService.follow(1, 1);
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
     }
 
     @Test(expected = RequestParamException.class)
     public void followRequestParamExceptionValueTest() {
 
-        ResponseEntity entityUser = socialMediaAppService.follow(0,1);
+        ResponseEntity entityUser = socialMediaAppService.follow(0, 1);
         Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
     }
 
     @Test(expected = UserDoesNotExistsException.class)
     public void followUserDoesNotExistsExceptionFollowerTest() {
 
-        ResponseEntity entityUser = socialMediaAppService.follow(7,2);
+        ResponseEntity entityUser = socialMediaAppService.follow(7, 2);
         Assert.assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
     }
 
     @Test(expected = UserDoesNotExistsException.class)
     public void followUserDoesNotExistsExceptionFolloweeTest() {
 
-        ResponseEntity entityUser = socialMediaAppService.follow(1,7);
+        ResponseEntity entityUser = socialMediaAppService.follow(1, 7);
         Assert.assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
     }
-
-
 
 
 }
