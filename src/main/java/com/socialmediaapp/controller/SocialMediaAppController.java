@@ -13,12 +13,6 @@ public class SocialMediaAppController {
     @Autowired
     private SocialMediaAppService socialMediaAppService;
 
-    @GetMapping("ping")
-    public String getPing() {
-
-        return "Social Media App is working.";
-    }
-
     @GetMapping("getAllUsers")
     public ResponseEntity getAllUsers() {
         return socialMediaAppService.getAllUsers();

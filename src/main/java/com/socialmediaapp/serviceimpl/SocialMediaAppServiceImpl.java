@@ -110,7 +110,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             FollowModel followModel = new FollowModel();
             followModel.setFolloweeId(followeeModel.getUserID());
             followModel.setFolloweeName(followeeModel.getUserName());
-            if ( Objects.isNull(followerModel.getFollowee())) {
+            if (Objects.isNull(followerModel.getFollowee())) {
                 List<FollowModel> followeeModels = new ArrayList<>();
                 followeeModels.add(followModel);
                 followerModel.setFollowee(followeeModels);
@@ -193,7 +193,11 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         } catch (UserDoesNotExistsException e) {
             System.out.println(e.getStackTrace());
             throw new UserDoesNotExistsException(e.getMessage());
+        } catch (PostsNotAvailableException e) {
+            System.out.println(e.getStackTrace());
+            throw new PostsNotAvailableException(e.getMessage());
         }
+
         return new ResponseEntity(newsFeedModel.stream().limit(20).collect(Collectors.toList()), HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 /Users/atulzambre/IdeaProjects/social-media-app/src/main/java/com/socialmediaapp/controller/SocialMediaAppController.java
 /Users/atulzambre/IdeaProjects/social-media-app/src/main/java/com/socialmediaapp/service/SocialMediaAppService.java
+/Users/atulzambre/IdeaProjects/social-media-app/src/main/java/com/socialmediaapp/exception/PostsNotAvailableException.java
 /Users/atulzambre/IdeaProjects/social-media-app/src/main/java/com/socialmediaapp/exception/UserDoesNotExistsException.java
 /Users/atulzambre/IdeaProjects/social-media-app/src/main/java/com/socialmediaapp/exception/SocialMediaAppExceptionHandler.java
 /Users/atulzambre/IdeaProjects/social-media-app/src/main/java/com/socialmediaapp/model/FollowModel.java
