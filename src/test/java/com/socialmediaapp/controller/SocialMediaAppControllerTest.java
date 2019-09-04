@@ -25,6 +25,11 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Junit/Mockito test cases to unit test the API all the methods and business logics.
+ *
+ * @author atulzambre
+ */
 @RunWith(SpringRunner.class)
 @WebMvcTest(SocialMediaAppController.class)
 public class SocialMediaAppControllerTest {

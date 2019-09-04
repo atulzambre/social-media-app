@@ -15,6 +15,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Junit/Mockito test cases to unit test the API all the methods and business logics.
+ *
+ * @author atulzambre
+ */
 @RunWith(SpringRunner.class)
 public class SocialMediaAppServiceImplTest {
     @InjectMocks

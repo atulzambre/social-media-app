@@ -265,13 +265,18 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         List<UserModel> checkList = new ArrayList<>(userList);
         List<PostModel> newsFeedModel = null;
         try {
+            //check - if null and empty request params.
             if (userID <= 0) {
                 throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
             }
+            //check - if User must exists in the collection.
             userModel = checkList.parallelStream().filter(s -> s.getUserID() == userID).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
+
+            //getall the posts of the User to the newsFeedModel
             if (Objects.nonNull(userModel.getPosts()))
                 newsFeedModel = new ArrayList<>(userModel.getPosts());
 
+            //check - if the User followee have any posts if they have then add those posts to the newsFeedModel
             if (Objects.nonNull(userModel.getFollowee())) {
                 for (FollowModel followModel : userModel.getFollowee()) {
                     for (UserModel userModel1 : checkList) {
@@ -281,9 +286,12 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
                     }
                 }
             }
+            //check - if the newsFeedModel is empty.
             if (Objects.isNull(newsFeedModel) || newsFeedModel.isEmpty()) {
                 throw new PostsNotAvailableException(ErrorMessageConstantModel.POSTS_NOT_AVAILABLE);
             }
+            //sort the newsFeedModel model according to the posts creation date and time ascending order
+            //Implemented Comparable interface in PostModel class.
             Collections.sort(newsFeedModel);
 
 
@@ -297,6 +305,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             System.out.println(Arrays.toString(e.getStackTrace()));
             throw new PostsNotAvailableException(e.getMessage());
         }
+        //Wrap the response with max top 20 feeds in ResponseEntity.
         ResponseEntity response;
         response = new ResponseEntity(newsFeedModel.stream().limit(20).collect(Collectors.toList()), HttpStatus.OK);
         return response;
