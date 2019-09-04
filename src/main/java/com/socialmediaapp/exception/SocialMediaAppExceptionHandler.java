@@ -36,4 +36,10 @@ public class SocialMediaAppExceptionHandler extends ResponseEntityExceptionHandl
         ErrorResponseModel errorResponseModel = new ErrorResponseModel.ErrorResponseExceptionBuilder(HttpStatus.NOT_FOUND.value()).error(HttpStatus.NOT_FOUND.toString()).message(ex.getMessage()).timestamp(LocalDateTime.now()).build();
         return new ResponseEntity(errorResponseModel, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(PostsNotAvailableException.class)
+    public final ResponseEntity postsNotAvailableException(PostsNotAvailableException ex, WebRequest web) {
+        ErrorResponseModel errorResponseModel = new ErrorResponseModel.ErrorResponseExceptionBuilder(HttpStatus.NOT_FOUND.value()).error(HttpStatus.NOT_FOUND.toString()).message(ex.getMessage()).timestamp(LocalDateTime.now()).build();
+        return new ResponseEntity(errorResponseModel, HttpStatus.NOT_FOUND);
+    }
 }

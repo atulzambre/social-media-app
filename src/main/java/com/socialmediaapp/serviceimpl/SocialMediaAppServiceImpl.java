@@ -1,5 +1,6 @@
 package com.socialmediaapp.serviceimpl;
 
+import com.socialmediaapp.exception.PostsNotAvailableException;
 import com.socialmediaapp.exception.RequestParamException;
 import com.socialmediaapp.exception.UserAlreadyExistsException;
 import com.socialmediaapp.exception.UserDoesNotExistsException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -165,6 +167,20 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             userModel = userList.parallelStream().filter(s -> s.getUserID() == userID).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
             if (userModel.getPosts() != null)
                 newsFeedModel = userModel.getPosts();
+
+            for(FollowModel followModel:userModel.getFollowee()){
+                for(UserModel userModel1:userList){
+                        if(followModel.getFolloweeId()==userModel1.getUserID()){
+                            newsFeedModel.addAll(userModel1.getPosts());
+                        }
+                }
+               if(newsFeedModel.isEmpty()){
+                   throw new PostsNotAvailableException(ErrorMessageConstantModel.POSTS_NOT_AVAILABLE);
+               }
+
+             Collections.sort(newsFeedModel);
+
+            }
 
 
         } catch (RequestParamException e) {

@@ -26,32 +26,27 @@ public class SocialMediaAppController {
 
     @GetMapping("createUser")
     public ResponseEntity createUser(@RequestParam("userID") int userID, @RequestParam("userName") String userName) {
-
-        ResponseEntity responseUser = socialMediaAppService.createUser(userID, userName);
-        return responseUser;
+        return socialMediaAppService.createUser(userID, userName);
     }
 
     @GetMapping("createNewPost")
     public ResponseEntity createNewPost(@RequestParam("userID") int userID, @RequestParam("postContent") String postContent) {
-        ResponseEntity responseUser = socialMediaAppService.createNewPost(userID, postContent);
-        return responseUser;
+        return socialMediaAppService.createNewPost(userID, postContent);
     }
 
     @GetMapping("getNewsFeed")
-    public String getNewsFeed() {
-        return "20 most recent feeds created.";
+    public ResponseEntity getNewsFeed(@RequestParam("userID") int userID) {
+        return socialMediaAppService.getNewsFeed(userID);
     }
 
     @GetMapping("follow")
     public ResponseEntity follow(@RequestParam("followerId") int followerId, @RequestParam("followeeId") int followeeId) {
-        ResponseEntity responseFollow = socialMediaAppService.follow(followerId, followeeId);
-        return responseFollow;
+        return socialMediaAppService.follow(followerId, followeeId);
     }
 
     @GetMapping("unfollow")
     public ResponseEntity unFollow(@RequestParam("followerId") int followerId, @RequestParam("followeeId") int followeeId) {
-        ResponseEntity responseFollow = socialMediaAppService.unFollow(followerId, followeeId);
-        return responseFollow;
+        return socialMediaAppService.unFollow(followerId, followeeId);
     }
 
 }
