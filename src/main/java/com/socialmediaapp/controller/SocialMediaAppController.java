@@ -51,13 +51,13 @@ class SocialMediaAppController {
     }
 
     //follow() will follow the user and return the user else throw exception
-    @PostMapping(value = "follow", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "follow", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity follow(@RequestBody FollowUnFollowRequestModel followRequestModel) {
         return socialMediaAppService.follow(followRequestModel.getFollowerId(), followRequestModel.getFolloweeId());
     }
 
     //unfollow() will unfollow the user and return the user else throw exception
-    @PostMapping(value = "unfollow", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "unfollow", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity unFollow(@RequestBody FollowUnFollowRequestModel unFollowRequestModel) {
         return socialMediaAppService.unFollow(unFollowRequestModel.getFollowerId(), unFollowRequestModel.getFolloweeId());
     }

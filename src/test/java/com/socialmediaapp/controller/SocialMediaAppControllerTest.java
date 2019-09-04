@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -112,7 +113,7 @@ public class SocialMediaAppControllerTest {
         ResponseEntity<UserModel> responseEntity;
         responseEntity = new ResponseEntity<>(userModel, HttpStatus.OK);
         Mockito.when(socialMediaAppService.follow(1, 2)).thenReturn(responseEntity);
-        mvc.perform(post("/follow")
+        mvc.perform(put("/follow")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(followRequestModel)))
                 .andExpect(status().isOk());
@@ -129,7 +130,7 @@ public class SocialMediaAppControllerTest {
         ResponseEntity<UserModel> responseEntity;
         responseEntity = new ResponseEntity<>(userModel, HttpStatus.OK);
         Mockito.when(socialMediaAppService.follow(1, 2)).thenReturn(responseEntity);
-        mvc.perform(post("/unfollow")
+        mvc.perform(put("/unfollow")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(unfollowRequestModel)))
                 .andExpect(status().isOk());
