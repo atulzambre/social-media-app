@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -25,8 +26,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SocialMediaAppServiceImpl implements SocialMediaAppService {
-    //    Created static final userList collection to store the User related data.
-    private static final List<UserModel> userCollectionDatabase = new ArrayList<>(5);
+    //    Created static volatile for thread safe userList collection to store the User related data.
+    private static volatile CopyOnWriteArrayList<UserModel> userCollectionDatabase = new CopyOnWriteArrayList<>();
 
 
     /**
@@ -50,10 +51,13 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             newUser.setUserName(userName);
 
             //check - if user already present in the collection if not then save the user.
-            if (!userCollectionDatabase.isEmpty() && userCollectionDatabase.parallelStream().anyMatch(s -> s.getUserId() == newUser.getUserId())) {
+            if (!userCollectionDatabase.isEmpty() && userCollectionDatabase.stream().anyMatch(s -> s.getUserId() == newUser.getUserId())) {
                 throw new UserAlreadyExistsException(ErrorMessageConstantModel.USER_ALREADY_EXISTS);
             } else {
-                userCollectionDatabase.add(newUser);
+                //Thread Safe - use use threads else remove the syncronized
+                synchronized (this){
+                    userCollectionDatabase.add(newUser);
+                }
             }
         } catch (RequestParamException e) {
             throw new RequestParamException(e.getMessage());
@@ -113,21 +117,23 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
             newPost.setPostContent(postContent);
             //check -  the User with userID is present in the collection and throws UserDoesNotExistsException if false.
-            user = userCollectionDatabase.parallelStream().filter(s -> s.getUserId() == userId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
+            user = userCollectionDatabase.stream().filter(s -> s.getUserId() == userId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
             newPost.setPostId(postId);
             newPost.setPostCreated();
             //check - if the User is having any posts if not then create new post
-            if (Objects.isNull(user.getPosts())) {
-                List<PostModel> postModels = new ArrayList<>();
-                postModels.add(newPost);
-                user.setPosts(postModels);
-            } else {
-                //check - if the postID is already exists.
-                if (user.getPosts().parallelStream().anyMatch(s -> s.getPostId() == postId))
-                    throw new RequestParamException(ErrorMessageConstantModel.POST_ALREADY_EXISTS);
-                user.getPosts().add(newPost);
+            //Thread Safe - if use threads else remove the syncronized block
+            synchronized (this) {
+                if (Objects.isNull(user.getPosts())) {
+                    List<PostModel> postModels = new ArrayList<>();
+                    postModels.add(newPost);
+                    user.setPosts(postModels);
+                } else {
+                    //check - if the postID is already exists.
+                    if (user.getPosts().stream().anyMatch(s -> s.getPostId() == postId))
+                        throw new RequestParamException(ErrorMessageConstantModel.POST_ALREADY_EXISTS);
+                    user.getPosts().add(newPost);
+                }
             }
-
 
         } catch (RequestParamException e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
@@ -169,21 +175,24 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             }
 
             //check - if follower and followee must exists in the collection.
-            followerModel = userCollectionDatabase.parallelStream().filter(s -> s.getUserId() == followerId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWER_DOES_NOT_EXISTS));
-            followeeModel = userCollectionDatabase.parallelStream().filter(s -> s.getUserId() == followeeId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWEE_DOES_NOT_EXISTS));
+            followerModel = userCollectionDatabase.stream().filter(s -> s.getUserId() == followerId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWER_DOES_NOT_EXISTS));
+            followeeModel = userCollectionDatabase.stream().filter(s -> s.getUserId() == followeeId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWEE_DOES_NOT_EXISTS));
             //check - if user already following the followee.
-            if (Objects.nonNull(followerModel.getFollowee()) && followerModel.getFollowee().parallelStream().anyMatch(s -> s.getFolloweeId() == followeeModel.getUserId()))
+            if (Objects.nonNull(followerModel.getFollowee()) && followerModel.getFollowee().stream().anyMatch(s -> s.getFolloweeId() == followeeModel.getUserId()))
                 throw new RequestParamException(ErrorMessageConstantModel.ALREADY_FOLLOWING);
             FollowModel followModel = new FollowModel();
             followModel.setFolloweeId(followeeModel.getUserId());
             followModel.setFolloweeName(followeeModel.getUserName());
             //check - if follower dont have any followee then  create new followee.
-            if (Objects.isNull(followerModel.getFollowee())) {
-                List<FollowModel> followeeModels = new ArrayList<>();
-                followeeModels.add(followModel);
-                followerModel.setFollowee(followeeModels);
-            } else {
-                followerModel.getFollowee().add(followModel);
+            //Thread Safe - use use threads else remove the syncronized
+            synchronized (this) {
+                if (Objects.isNull(followerModel.getFollowee())) {
+                    List<FollowModel> followeeModels = new ArrayList<>();
+                    followeeModels.add(followModel);
+                    followerModel.setFollowee(followeeModels);
+                } else {
+                    followerModel.getFollowee().add(followModel);
+                }
             }
 
         } catch (RequestParamException e) {
@@ -226,14 +235,17 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             }
 
             //check - if follower and followee must exists in the collection.
-            followerModel = userCollectionDatabase.parallelStream().filter(s -> s.getUserId() == followerId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWER_DOES_NOT_EXISTS));
-            followeeModel = userCollectionDatabase.parallelStream().filter(s -> s.getUserId() == followeeId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWEE_DOES_NOT_EXISTS));
+            followerModel = userCollectionDatabase.stream().filter(s -> s.getUserId() == followerId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWER_DOES_NOT_EXISTS));
+            followeeModel = userCollectionDatabase.stream().filter(s -> s.getUserId() == followeeId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWEE_DOES_NOT_EXISTS));
 
             //check - if user is following the followee then remove it else throw already not following.
-            if (followerModel.getFollowee().parallelStream().anyMatch(s -> s.getFolloweeId() == followeeModel.getUserId())) {
-                followerModel.getFollowee().removeIf(s -> s.getFolloweeId() == followeeModel.getUserId());
-            } else {
-                throw new RequestParamException(ErrorMessageConstantModel.NOT_FOLLOWING_USER);
+            //Thread Safe - use use threads else remove the syncronized
+            synchronized (this) {
+                if (followerModel.getFollowee().stream().anyMatch(s -> s.getFolloweeId() == followeeModel.getUserId())) {
+                    followerModel.getFollowee().removeIf(s -> s.getFolloweeId() == followeeModel.getUserId());
+                } else {
+                    throw new RequestParamException(ErrorMessageConstantModel.NOT_FOLLOWING_USER);
+                }
             }
         } catch (RequestParamException e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
@@ -270,18 +282,21 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
                 throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
             }
             //check - if User must exists in the collection.
-            userModel = proxyuserCollectionDatabase.parallelStream().filter(s -> s.getUserId() == userId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
+            userModel = proxyuserCollectionDatabase.stream().filter(s -> s.getUserId() == userId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS));
 
             //getall the posts of the User to the newsFeedModel
-            if (Objects.nonNull(userModel.getPosts()))
-                newsFeedModel = new ArrayList<>(userModel.getPosts());
+            //Thread Safe - use use threads else remove the syncronized
+            synchronized (this) {
+                if (Objects.nonNull(userModel.getPosts()))
+                    newsFeedModel = new ArrayList<>(userModel.getPosts());
 
-            //check - if the User followee have any posts if they have then add those posts to the newsFeedModel
-            if (Objects.nonNull(userModel.getFollowee())) {
-                for (FollowModel followModel : userModel.getFollowee()) {
-                    for (UserModel innerUserModel : proxyuserCollectionDatabase) {
-                        if (followModel.getFolloweeId() == innerUserModel.getUserId() && Objects.nonNull(innerUserModel.getPosts())) {
-                            newsFeedModel.addAll(innerUserModel.getPosts());
+                //check - if the User followee have any posts if they have then add those posts to the newsFeedModel
+                if (Objects.nonNull(userModel.getFollowee())) {
+                    for (FollowModel followModel : userModel.getFollowee()) {
+                        for (UserModel innerUserModel : proxyuserCollectionDatabase) {
+                            if (followModel.getFolloweeId() == innerUserModel.getUserId() && Objects.nonNull(innerUserModel.getPosts())) {
+                                newsFeedModel.addAll(innerUserModel.getPosts());
+                            }
                         }
                     }
                 }
