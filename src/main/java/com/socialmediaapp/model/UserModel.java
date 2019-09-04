@@ -3,17 +3,17 @@ package com.socialmediaapp.model;
 import java.util.List;
 
 public class UserModel {
-    private int userID;
+    private int userId;
     private String userName;
     private List<PostModel> posts;
     private List<FollowModel> followee;
 
-    public int getUserID() {
-        return userID;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public List<PostModel> getPosts() {

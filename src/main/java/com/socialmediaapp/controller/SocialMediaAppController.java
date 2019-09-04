@@ -35,19 +35,19 @@ class SocialMediaAppController {
     //createUser() will return the successfully created User else throw exception
     @PostMapping("createUser")
     public ResponseEntity createUser(@RequestBody UserModel userRequest) {
-        return socialMediaAppService.createUser(userRequest.getUserID(), userRequest.getUserName());
+        return socialMediaAppService.createUser(userRequest.getUserId(), userRequest.getUserName());
     }
 
     //createNewPost() will return the successfully created posts else throw exception
     @PostMapping(value = "createNewPost", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createNewPost(@RequestBody CreatePostRequestModel postRequestModel) {
-        return socialMediaAppService.createNewPost(postRequestModel.getUserID(), postRequestModel.getPostID(), postRequestModel.getPostContent());
+        return socialMediaAppService.createNewPost(postRequestModel.getUserId(), postRequestModel.getPostId(), postRequestModel.getPostContent());
     }
 
     //getNewsFeed() will return the to 20 recent post made by user or their followee else throw exception
     @GetMapping("getNewsFeed")
-    public ResponseEntity getNewsFeed(@RequestParam("userID") int userID) {
-        return socialMediaAppService.getNewsFeed(userID);
+    public ResponseEntity getNewsFeed(@RequestParam("userId") int userId) {
+        return socialMediaAppService.getNewsFeed(userId);
     }
 
     //follow() will follow the user and return the user else throw exception

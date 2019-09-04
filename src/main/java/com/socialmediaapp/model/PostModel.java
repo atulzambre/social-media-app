@@ -3,16 +3,16 @@ package com.socialmediaapp.model;
 import java.time.LocalDateTime;
 
 public class PostModel implements Comparable<PostModel> {
-    private int postID;
+    private int postId;
     private String postContent;
     private LocalDateTime postCreated;
 
-    public int getPostID() {
-        return postID;
+    public int getPostId() {
+        return postId;
     }
 
-    public void setPostID(int postID) {
-        this.postID = postID;
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 
     public String getPostContent() {
@@ -27,8 +27,8 @@ public class PostModel implements Comparable<PostModel> {
         return postCreated;
     }
 
-    public void setPostCreated(LocalDateTime postCreated) {
-        this.postCreated = postCreated;
+    public void setPostCreated() {
+        this.postCreated = LocalDateTime.now();
     }
 
     @Override
