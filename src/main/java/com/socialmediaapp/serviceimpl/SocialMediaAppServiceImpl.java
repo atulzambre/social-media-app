@@ -256,6 +256,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
      * it will throw an exception if there are no any feeds available.
      * Also check for the userID must exists in the collection.
      * if the conditions are not satisfied then it throw exceptions which is then catch in CustomExceptionHandler.
+     *
      * @param userID
      * @return Maximum top 20 recent posts (returns with postID, postContent and postCreation to better understand the recentness).
      */

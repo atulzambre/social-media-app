@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 /**
  * CustomExceptionHandler to handle the Runtime exceptions occurring in the API.
  * Designed Builder patter to create a immutable errorResponse.
+ *
  * @author atulzambre
  */
 @RestControllerAdvice
