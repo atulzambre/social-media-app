@@ -90,7 +90,6 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
                 throw new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
             }
         } catch (UserDoesNotExistsException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
             throw new UserDoesNotExistsException(e.getMessage());
         }
         //Wrap the response user objects in ResponseEntity.
@@ -141,7 +140,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             }
 
         } catch (RequestParamException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+
             throw new RequestParamException(e.getMessage());
         } catch (UserDoesNotExistsException e) {
             throw new UserDoesNotExistsException(e.getMessage());
@@ -201,10 +200,10 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             }
 
         } catch (RequestParamException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+
             throw new RequestParamException(e.getMessage());
         } catch (UserDoesNotExistsException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+
             throw new UserDoesNotExistsException(e.getMessage());
         }
         //Wrap the response User with all the followee objects in ResponseEntity.
@@ -253,10 +252,10 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
                 }
             }
         } catch (RequestParamException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+
             throw new RequestParamException(e.getMessage());
         } catch (UserDoesNotExistsException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+
             throw new UserDoesNotExistsException(e.getMessage());
         }
 
@@ -316,13 +315,13 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
 
         } catch (RequestParamException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+
             throw new RequestParamException(e.getMessage());
         } catch (UserDoesNotExistsException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+
             throw new UserDoesNotExistsException(e.getMessage());
         } catch (PostsNotAvailableException e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+
             throw new PostsNotAvailableException(e.getMessage());
         }
         //Wrap the response with max top 20 feeds in ResponseEntity.
