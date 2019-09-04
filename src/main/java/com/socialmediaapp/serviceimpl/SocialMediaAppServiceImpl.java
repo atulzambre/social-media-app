@@ -245,7 +245,8 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             //check - if user is following the followee then remove it else throw already not following.
             //Thread Safe - use use threads else remove the syncronized
             synchronized (this) {
-                if (followerModel.getFollowee().stream().anyMatch(s -> s.getFolloweeId() == followeeModel.getUserId())) {
+                if (Objects.nonNull(followerModel.getFollowee())&&followerModel.getFollowee().stream().anyMatch(s -> s.getFolloweeId() == followeeModel.getUserId())) {
+
                     followerModel.getFollowee().removeIf(s -> s.getFolloweeId() == followeeModel.getUserId());
                 } else {
                     throw new RequestParamException(ErrorMessageConstantModel.NOT_FOLLOWING_USER);
