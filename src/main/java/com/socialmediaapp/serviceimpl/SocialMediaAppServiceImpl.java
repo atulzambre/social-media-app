@@ -62,12 +62,12 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     }
 
     @Override
-    public ResponseEntity createNewPost(int userID,int postID, String postContent) {
+    public ResponseEntity createNewPost(int userID, int postID, String postContent) {
         PostModel newPost = new PostModel();
 
         UserModel user;
         try {
-            if (userID <= 0 ||postID<=0 || postContent.isEmpty())
+            if (userID <= 0 || postID <= 0 || postContent.isEmpty())
                 throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
 
             newPost.setPostContent(postContent);
@@ -79,7 +79,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
                 postModels.add(newPost);
                 user.setPosts(postModels);
             } else {
-                if(user.getPosts().parallelStream().anyMatch(s->s.getPostID()==postID))
+                if (user.getPosts().parallelStream().anyMatch(s -> s.getPostID() == postID))
                     throw new RequestParamException(ErrorMessageConstantModel.POST_ALREADY_EXISTS);
                 user.getPosts().add(newPost);
             }
@@ -161,8 +161,8 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
     @Override
     public ResponseEntity getNewsFeed(int userID) {
-        UserModel userModel=null;
-        List<UserModel> checkList=new ArrayList<>(userList);
+        UserModel userModel = null;
+        List<UserModel> checkList = new ArrayList<>(userList);
         List<PostModel> newsFeedModel = null;
         try {
             if (userID <= 0) {
@@ -183,7 +183,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
                 }
             }
-            if (Objects.isNull(newsFeedModel)||newsFeedModel.isEmpty()) {
+            if (Objects.isNull(newsFeedModel) || newsFeedModel.isEmpty()) {
                 throw new PostsNotAvailableException(ErrorMessageConstantModel.POSTS_NOT_AVAILABLE);
             }
             Collections.sort(newsFeedModel);

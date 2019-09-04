@@ -1,6 +1,9 @@
 package com.socialmediaapp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.socialmediaapp.model.CreatePostRequestModel;
+import com.socialmediaapp.model.FollowUnFollowRequestModel;
+import com.socialmediaapp.model.PostModel;
 import com.socialmediaapp.model.UserModel;
 import com.socialmediaapp.service.SocialMediaAppService;
 import org.junit.Test;
@@ -16,6 +19,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -30,7 +37,7 @@ public class SocialMediaAppControllerTest {
 
     @Test
     public void getAllUsersTest() throws Exception {
-        UserModel userModel=new UserModel();
+        UserModel userModel = new UserModel();
         userModel.setUserID(1);
         userModel.setUserName("test");
         Mockito.when(socialMediaAppService.getAllUsers()).thenReturn(new ResponseEntity(userModel, HttpStatus.OK));
@@ -39,40 +46,76 @@ public class SocialMediaAppControllerTest {
 
     @Test
     public void createUserTest() throws Exception {
-        UserModel userModel=new UserModel();
+        UserModel userModel = new UserModel();
         userModel.setUserID(1);
         userModel.setUserName("test");
-
-        Mockito.when(socialMediaAppService.createUser(1,"test")).thenReturn(new ResponseEntity(userModel, HttpStatus.OK));
-//        mvc.perform(MockMvcRequestBuilders.get("/createUser?userID=1&userName=test").accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
-        mvc.perform(MockMvcRequestBuilders.post("/createUser").content(new ObjectMapper().writeValueAsString(userModel))).andExpect(status().isOk());
+        Mockito.when(socialMediaAppService.createUser(1, "test")).thenReturn(new ResponseEntity(userModel, HttpStatus.OK));
+        mvc.perform(post("/createUser")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(userModel)))
+                .andExpect(status().isOk());
     }
 
 
-//    @Test
-//    public void createNewPostTest() throws Exception {
-//        UserModel userModel=new UserModel();
-//        userModel.setUserID(1);
-//        userModel.setUserName("test");
-//        PostModel postModel=new PostModel();
-//        postModel.setPostID(1);
-//        postModel.setPostContent("test");
-//        userModel.setPosts(Arrays.asList(postModel));
-//        Mockito.when(socialMediaAppService.createNewPost(1,1,"test")).thenReturn(new ResponseEntity(userModel, HttpStatus.OK));
-//        mvc.perform(MockMvcRequestBuilders.get("/createNewPost?userID=1&postContent=test").accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
-//    }
+    @Test
+    public void createNewPostTest() throws Exception {
+        UserModel userModel = new UserModel();
+        userModel.setUserID(1);
+        userModel.setUserName("test");
+        PostModel postModel = new PostModel();
+        postModel.setPostID(1);
+        postModel.setPostContent("test");
+        userModel.setPosts(Arrays.asList(postModel));
+        CreatePostRequestModel createPostRequestModel = new CreatePostRequestModel();
+        createPostRequestModel.setUserID(1);
+        createPostRequestModel.setPostID(1);
+        createPostRequestModel.setPostContent("Test");
+        Mockito.when(socialMediaAppService.createNewPost(1, 1, "test")).thenReturn(new ResponseEntity(userModel, HttpStatus.OK));
+        mvc.perform(post("/createNewPost")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(createPostRequestModel)))
+                .andExpect(status().isOk());
+    }
 
-//    @Test
-//    public void createNewPostTest() throws Exception {
-//        UserModel userModel=new UserModel();
-//        userModel.setUserID(1);
-//        userModel.setUserName("test");
-//        PostModel postModel=new PostModel();
-//        postModel.setPostID(1);
-//        postModel.setPostContent("test");
-//        userModel.setPosts(Arrays.asList(postModel));
-//        Mockito.when(socialMediaAppService.createNewPost(1,"test")).thenReturn(new ResponseEntity(userModel, HttpStatus.OK));
-//        mvc.perform(MockMvcRequestBuilders.get("/createNewPost?userID=1&postContent=test").accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
-//    }
+    @Test
+    public void getNewsFeedTest() throws Exception {
+
+        PostModel postModel = new PostModel();
+        postModel.setPostID(1);
+        postModel.setPostContent("test");
+        List<PostModel> postModelList = Arrays.asList(postModel);
+        Mockito.when(socialMediaAppService.getNewsFeed(1)).thenReturn(new ResponseEntity(postModelList, HttpStatus.OK));
+        mvc.perform(MockMvcRequestBuilders.get("/getNewsFeed?userID=1").accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+    }
+
+    @Test
+    public void followTest() throws Exception {
+        UserModel userModel = new UserModel();
+        userModel.setUserID(1);
+        userModel.setUserName("test");
+        FollowUnFollowRequestModel followRequestModel = new FollowUnFollowRequestModel();
+        followRequestModel.setFollowerId(1);
+        followRequestModel.setFolloweeId(2);
+        Mockito.when(socialMediaAppService.follow(1, 2)).thenReturn(new ResponseEntity(userModel, HttpStatus.OK));
+        mvc.perform(post("/follow")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(followRequestModel)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void unFollowTest() throws Exception {
+        UserModel userModel = new UserModel();
+        userModel.setUserID(1);
+        userModel.setUserName("test");
+        FollowUnFollowRequestModel unfollowRequestModel = new FollowUnFollowRequestModel();
+        unfollowRequestModel.setFollowerId(1);
+        unfollowRequestModel.setFolloweeId(2);
+        Mockito.when(socialMediaAppService.follow(1, 2)).thenReturn(new ResponseEntity(userModel, HttpStatus.OK));
+        mvc.perform(post("/unfollow")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(unfollowRequestModel)))
+                .andExpect(status().isOk());
+    }
 
 }

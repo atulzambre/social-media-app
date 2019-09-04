@@ -25,9 +25,9 @@ public class SocialMediaAppController {
         return socialMediaAppService.createUser(userRequest.getUserID(), userRequest.getUserName());
     }
 
-    @PostMapping(value = "createNewPost",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "createNewPost", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createNewPost(@RequestBody CreatePostRequestModel postRequestModel) {
-        return socialMediaAppService.createNewPost(postRequestModel.getUserID(),postRequestModel.getPostID(),postRequestModel.getPostContent());
+        return socialMediaAppService.createNewPost(postRequestModel.getUserID(), postRequestModel.getPostID(), postRequestModel.getPostContent());
     }
 
     @GetMapping("getNewsFeed")
@@ -35,12 +35,12 @@ public class SocialMediaAppController {
         return socialMediaAppService.getNewsFeed(userID);
     }
 
-    @PostMapping(value="follow",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "follow", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity follow(@RequestBody FollowUnFollowRequestModel followRequestModel) {
         return socialMediaAppService.follow(followRequestModel.getFollowerId(), followRequestModel.getFolloweeId());
     }
 
-    @PostMapping(value="unfollow",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "unfollow", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity unFollow(@RequestBody FollowUnFollowRequestModel unFollowRequestModel) {
         return socialMediaAppService.unFollow(unFollowRequestModel.getFollowerId(), unFollowRequestModel.getFolloweeId());
     }

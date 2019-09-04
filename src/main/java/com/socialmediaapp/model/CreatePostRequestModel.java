@@ -1,6 +1,6 @@
 package com.socialmediaapp.model;
 
-public class CreatePostRequestModel{
+public class CreatePostRequestModel {
     private int userID;
     private int postID;
     private String postContent;
