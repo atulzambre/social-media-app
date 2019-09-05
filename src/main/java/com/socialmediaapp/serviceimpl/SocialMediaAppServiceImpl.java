@@ -136,45 +136,6 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         UserModel followeeUser=userIdIndex.get(followeeId);
         userIdIndex.get(followerId).getFollowees().remove(followeeId);
         return new ResponseEntity(userIdIndex.get(followerId),HttpStatus.OK);
-//        UserModel followerModel;
-//        UserModel followeeModel;
-//
-//        try {
-//            //check - if user tried to unfollow itself
-//            if (followeeId == followerId) {
-//                throw new RequestParamException(ErrorMessageConstantModel.CAN_NOT_UNFOLLOW_SELF);
-//            }
-//            //check - if null and empty request params.
-//            else if (followeeId <= 0 || followerId <= 0) {
-//                throw new RequestParamException(ErrorMessageConstantModel.MISSING_REQUEST_PARAM);
-//            }
-//
-//            //check - if follower and followee must exists in the collection.
-//            followerModel = userCollectionDatabase.stream().filter(s -> s.getUserId() == followerId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWER_DOES_NOT_EXISTS));
-//            followeeModel = userCollectionDatabase.stream().filter(s -> s.getUserId() == followeeId).findFirst().orElseThrow(() -> new UserDoesNotExistsException(ErrorMessageConstantModel.FOLLOWEE_DOES_NOT_EXISTS));
-//
-//            //check - if user is following the followee then remove it else throw already not following.
-//            //Thread Safe - use use threads else remove the syncronized
-//            synchronized (this) {
-//                if (Objects.nonNull(followerModel.getFollowee())&&followerModel.getFollowee().stream().anyMatch(s -> s.getFolloweeId() == followeeModel.getUserId())) {
-//
-//                    followerModel.getFollowee().removeIf(s -> s.getFolloweeId() == followeeModel.getUserId());
-//                } else {
-//                    throw new RequestParamException(ErrorMessageConstantModel.NOT_FOLLOWING_USER);
-//                }
-//            }
-//        } catch (RequestParamException e) {
-//
-//            throw new RequestParamException(e.getMessage());
-//        } catch (UserDoesNotExistsException e) {
-//
-//            throw new UserDoesNotExistsException(e.getMessage());
-//        }
-//
-//        //Wrap the response User with all the followee objects in ResponseEntity.
-//        ResponseEntity<UserModel> response;
-//        response = new ResponseEntity<>(followerModel, HttpStatus.OK);
-//        return response;
 
     }
 
