@@ -29,7 +29,6 @@ public class UserOperationsServiceImpl implements UserOperationsService {
         newUser.setUserId(userId);
         newUser.setUserName(userName);
         synchronized (this) {
-            SocialMediaAppServiceImpl.userCollectionDatabase.add(newUser);
             SocialMediaAppServiceImpl.userIdIndex.put(userId, newUser);
         }
         return new ResponseEntity<>(newUser, HttpStatus.OK);
@@ -43,9 +42,9 @@ public class UserOperationsServiceImpl implements UserOperationsService {
      */
     @Override
     public ResponseEntity getAllUsers() {
-        if (SocialMediaAppServiceImpl.userCollectionDatabase.isEmpty()) {
+        if (SocialMediaAppServiceImpl.userIdIndex.isEmpty()) {
             throw new CustomNotFoundException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
         }
-        return new ResponseEntity<>(SocialMediaAppServiceImpl.userCollectionDatabase, HttpStatus.OK);
+        return new ResponseEntity<>(SocialMediaAppServiceImpl.userIdIndex, HttpStatus.OK);
     }
 }

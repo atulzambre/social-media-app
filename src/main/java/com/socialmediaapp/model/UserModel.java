@@ -1,13 +1,17 @@
 package com.socialmediaapp.model;
 
+import javax.validation.constraints.Pattern;
 import java.util.*;
 
 public class UserModel {
+
+    @Pattern(regexp = "^[1-9][0-9]*$")
     private String userId;
+    @Pattern(regexp = "^(?=\\s*\\S).*$")
     private String userName;
-    private Map<String, PostModel> postModelMap=new HashMap<>();
-    private List<PostModel> posts=new ArrayList<>();
-    private Set<String> followees=new HashSet<>();
+    private Map<String, PostModel> postModelMap = new HashMap<>();
+    private List<PostModel> posts = new ArrayList<>();
+    private Set<String> followees = new HashSet<>();
 
     public String getUserId() {
         return userId;
@@ -48,12 +52,12 @@ public class UserModel {
     public void setFollowees(Set<String> followees) {
         this.followees = followees;
     }
+
     public List<PostModel> getTopPosts(int numberOfPosts) {
         int size = posts.size();
-        if(size<=20){
+        if (size <= 20) {
             return posts;
-        }
-        else{
+        } else {
             return posts.subList(size - 21, size);
         }
 

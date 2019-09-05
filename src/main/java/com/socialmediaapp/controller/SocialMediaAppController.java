@@ -10,6 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 /**
  * SocialMediaApp designed to Create Users, Retrieve All Users, Follow Users, Unfollow Users
  * and get the top 20 recent feeds from users and there following users.
@@ -38,31 +41,31 @@ class SocialMediaAppController {
 
     //createUser() will return the successfully created User else throw exception
     @PostMapping("createUser")
-    public ResponseEntity createUser(@RequestBody UserModel userRequest) {
+    public ResponseEntity createUser(@Valid @RequestBody UserModel userRequest) {
         return userOperationsService.createUser(userRequest.getUserId(), userRequest.getUserName());
     }
 
     //createNewPost() will return the successfully created posts else throw exception
     @PostMapping(value = "createNewPost", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createNewPost(@RequestBody CreatePostRequestModel postRequestModel) {
+    public ResponseEntity createNewPost(@Valid @RequestBody CreatePostRequestModel postRequestModel) {
         return socialMediaAppService.createNewPost(postRequestModel.getUserId(), postRequestModel.getPostId(), postRequestModel.getPostContent());
     }
 
     //getNewsFeed() will return the to 20 recent post made by user or their followee else throw exception
     @GetMapping("getNewsFeed")
-    public ResponseEntity getNewsFeed(@RequestParam("userId") String userId) {
+    public ResponseEntity getNewsFeed(@Valid @RequestParam("userId") @NotNull String userId) {
         return socialMediaAppService.getNewsFeed(userId);
     }
 
     //follow() will follow the user and return the user else throw exception
     @PutMapping(value = "follow", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity follow(@RequestBody FollowUnFollowRequestModel followRequestModel) {
+    public ResponseEntity follow(@NotNull @RequestBody FollowUnFollowRequestModel followRequestModel) {
         return socialMediaAppService.follow(followRequestModel.getFollowerId(), followRequestModel.getFolloweeId());
     }
 
     //unfollow() will unfollow the user and return the user else throw exception
     @PutMapping(value = "unfollow", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity unFollow(@RequestBody FollowUnFollowRequestModel unFollowRequestModel) {
+    public ResponseEntity unFollow(@NotNull @RequestBody FollowUnFollowRequestModel unFollowRequestModel) {
         return socialMediaAppService.unFollow(unFollowRequestModel.getFollowerId(), unFollowRequestModel.getFolloweeId());
     }
 

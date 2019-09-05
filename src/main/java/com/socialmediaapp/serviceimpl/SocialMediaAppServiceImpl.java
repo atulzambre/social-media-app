@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * SocialMediaAppServiceImpl is implemented the methods from SocialMediaAppService and developed business logic for the problem statement.
@@ -23,12 +22,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 @Service
 public class SocialMediaAppServiceImpl implements SocialMediaAppService {
-    protected static final CopyOnWriteArrayList<UserModel> userCollectionDatabase = new CopyOnWriteArrayList<>();
-
     protected static final Map<String, UserModel> userIdIndex = new ConcurrentHashMap<>();
 
     /**
      * createNewPost method stores the new posts for the user.
+     *
      * @param userId
      * @param postId
      * @param postContent
@@ -56,43 +54,48 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
     /**
      * follow method stores information about one user following other to get the feeds.
+     *
      * @param followerId
      * @param followeeId
      * @return User with all the followee information.
      */
     @Override
     public ResponseEntity follow(String followerId, String followeeId) {
-        if(!(Objects.nonNull(userIdIndex.get(followerId))&&Objects.nonNull(userIdIndex.get(followeeId))))
+        if (!(Objects.nonNull(userIdIndex.get(followerId)) && Objects.nonNull(userIdIndex.get(followeeId))))
             throw new CustomNotFoundException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
-        if(userIdIndex.get(followerId).getFollowees().contains(followeeId))
+        if (userIdIndex.get(followerId).getFollowees().contains(followeeId))
             throw new CustomConflictException(ErrorMessageConstantModel.ALREADY_FOLLOWING);
         synchronized (this) {
             userIdIndex.get(followerId).getFollowees().add(followeeId);
         }
-        return new ResponseEntity(userIdIndex.get(followerId),HttpStatus.OK);
+        return new ResponseEntity(userIdIndex.get(followerId), HttpStatus.OK);
     }
+
 
     /**
      * unfollow method removes information about one user following other and should not get the feeds.
+     *
      * @param followerId
      * @param followeeId
      * @return User with all the followee information.
      */
     @Override
     public ResponseEntity unFollow(String followerId, String followeeId) {
-        if(!(Objects.nonNull(userIdIndex.get(followerId))&&Objects.nonNull(userIdIndex.get(followeeId))))
+        if (!(Objects.nonNull(userIdIndex.get(followerId)) && Objects.nonNull(userIdIndex.get(followeeId))))
             throw new CustomNotFoundException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
-        if(!userIdIndex.get(followerId).getFollowees().contains(followeeId))
+        if (!userIdIndex.get(followerId).getFollowees().contains(followeeId))
             throw new CustomConflictException(ErrorMessageConstantModel.NOT_FOLLOWING_USER);
 
         synchronized (this) {
             userIdIndex.get(followerId).getFollowees().remove(followeeId);
         }
-        return new ResponseEntity(userIdIndex.get(followerId),HttpStatus.OK);
+        return new ResponseEntity(userIdIndex.get(followerId), HttpStatus.OK);
     }
+
 
     /**
      * getNewsFeed method retrieves maximum top 20 recent feeds from User and its followees.
+     *
      * @param userId
      * @return Maximum top 20 recent posts (returns with postID, postContent and postCreation to better understand the recentness).
      */
@@ -103,18 +106,13 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
         UserModel user = userIdIndex.get(userId);
         List<PostModel> allFolloweePosts = new ArrayList<>();
-        for (String followeeId : user.getFollowees()) {
-            allFolloweePosts.addAll(userIdIndex.get(followeeId).getTopPosts(20));
+        synchronized (this) {
+            for (String followeeId : user.getFollowees()) {
+                allFolloweePosts.addAll(userIdIndex.get(followeeId).getTopPosts(20));
+            }
+            allFolloweePosts.addAll(user.getTopPosts(20));
         }
-//      allFolloweePosts=user.getFollowees().stream().streamfilter()
-        allFolloweePosts.addAll(user.getTopPosts(20));
-
         allFolloweePosts.sort(Comparator.comparing(PostModel::getPostCreated));
-        if(allFolloweePosts.size()<=20){
-            return new ResponseEntity(allFolloweePosts, HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity(allFolloweePosts.subList(0, 20), HttpStatus.OK);
-        }
+        return new ResponseEntity(allFolloweePosts.stream().limit(20), HttpStatus.OK);
     }
 }
