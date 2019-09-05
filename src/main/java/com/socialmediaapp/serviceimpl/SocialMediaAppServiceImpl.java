@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * SocialMediaAppServiceImpl is implemented the methods from SocialMediaAppService and developed business logic for the problem statement.
@@ -113,6 +114,6 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             allFolloweePosts.addAll(user.getTopPosts(20));
         }
         allFolloweePosts.sort(Comparator.comparing(PostModel::getPostCreated));
-        return new ResponseEntity(allFolloweePosts.stream().limit(20), HttpStatus.OK);
+        return new ResponseEntity(allFolloweePosts.stream().limit(20).collect(Collectors.toList()), HttpStatus.OK);
     }
 }

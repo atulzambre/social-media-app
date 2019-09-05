@@ -1,176 +1,129 @@
-//package com.socialmediaapp.serviceimpl;
-//
-//
-//import com.socialmediaapp.exception.PostsNotAvailableException;
-//import com.socialmediaapp.exception.RequestParamException;
-//import com.socialmediaapp.exception.UserAlreadyExistsException;
-//import com.socialmediaapp.exception.UserDoesNotExistsException;
-//import com.socialmediaapp.model.UserModel;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.mockito.InjectMocks;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.test.context.junit4.SpringRunner;
-//
-//import static org.junit.Assert.assertEquals;
-//
-///**
-// * Junit/Mockito test cases to unit test the API all the methods and business logics.
-// *
-// * @author atulzambre
-// */
-//@RunWith(SpringRunner.class)
-//public class SocialMediaAppServiceImplTest {
-//    @InjectMocks
-//    private SocialMediaAppServiceImpl socialMediaAppService;
-//
-//
-//    @Test
-//    public void createUsersTest() {
-//        ResponseEntity entityUser = socialMediaAppService.createUser(1, "atul");
-//        UserModel user = (UserModel) entityUser.getBody();
-//        assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
-//
-//    }
-//a/
-//    @Test(expected = RequestParamException.class)
-//    public void createUsersRequestParamExceptionTest() {
-//        ResponseEntity entityUser = socialMediaAppService.createUser(-1, "atul");
-//        assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = UserAlreadyExistsException.class)
-//    public void createUsersUserAlreadyExistsExceptionTest() {
-//        ResponseEntity entityUser = socialMediaAppService.createUser(1, "atul");
-//        assertEquals(HttpStatus.CONFLICT.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test
-//    public void getAllUsersTest() {
-//        socialMediaAppService.createUser(2, "atul");
-//        ResponseEntity entityUser = socialMediaAppService.getAllUsers();
-//        assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test
-//    public void createNewPostTest() {
-//        socialMediaAppService.createUser(3, "atul");
-//        ResponseEntity entityUser = socialMediaAppService.createNewPost(3, 4, "Comment Post");
-//        assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = RequestParamException.class)
-//    public void createNewPostRequestParamExceptionTest() {
-//
-//        ResponseEntity entityUser = socialMediaAppService.createNewPost(-3, 2, "Comment Post");
-//        assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = UserDoesNotExistsException.class)
-//    public void createNewPostUserDoesNotExistsExceptionTest() {
-//        ResponseEntity entityUser = socialMediaAppService.createNewPost(4, 2, "Comment Post");
-//        assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = RequestParamException.class)
-//    public void createNewPostElseExceptionTest() {
-//        socialMediaAppService.createUser(4, "atul");
-//        socialMediaAppService.createNewPost(4, 2, "Comment Post");
-//        ResponseEntity entityUser = socialMediaAppService.createNewPost(4, 2, "Comment Post");
-//        assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = RequestParamException.class)
-//    public void followRequestParamExceptionTest() {
-//
-//        ResponseEntity entityUser = socialMediaAppService.follow(1, 1);
-//        assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = RequestParamException.class)
-//    public void followRequestParamExceptionValueTest() {
-//
-//        ResponseEntity entityUser = socialMediaAppService.follow(0, 1);
-//        assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = UserDoesNotExistsException.class)
-//    public void followUserDoesNotExistsExceptionFollowerTest() {
-//
-//        ResponseEntity entityUser = socialMediaAppService.follow(7, 2);
-//        assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = UserDoesNotExistsException.class)
-//    public void followUserDoesNotExistsExceptionFolloweeTest() {
-//
-//        ResponseEntity entityUser = socialMediaAppService.follow(1, 7);
-//        assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = RequestParamException.class)
-//    public void followRequestParamExceptionFolloweeTest() {
-//        socialMediaAppService.follow(1, 2);
-//        ResponseEntity entityUser = socialMediaAppService.follow(1, 2);
-//        assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test
-//    public void unFollowTest() {
-//        ResponseEntity entityUser = socialMediaAppService.unFollow(1, 2);
-//        assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = RequestParamException.class)
-//    public void unFollowRequestParamExceptionTest() {
-//        ResponseEntity entityUser = socialMediaAppService.unFollow(1, 1);
-//        assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = RequestParamException.class)
-//    public void unFollowRequestParamExceptionFailTest() {
-//        ResponseEntity entityUser = socialMediaAppService.unFollow(-1, 1);
-//        assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = UserDoesNotExistsException.class)
-//    public void unFollowUserDoesNotExistsExceptionTest() {
-//        ResponseEntity entityUser = socialMediaAppService.unFollow(1, 4);
-//        assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test
-//    public void getNewsFeedTest() {
-//        socialMediaAppService.createUser(5, "test");
-//        socialMediaAppService.createNewPost(5, 1, "test post");
-//        socialMediaAppService.createUser(6, "test");
-//        socialMediaAppService.createNewPost(6, 1, "test post");
-//        socialMediaAppService.follow(5, 6);
-//        ResponseEntity entityUser = socialMediaAppService.getNewsFeed(5);
-//        assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = RequestParamException.class)
-//    public void getNewsFeedRequestParamExceptionTest() {
-//
-//        ResponseEntity entityUser = socialMediaAppService.getNewsFeed(-5);
-//        assertEquals(HttpStatus.BAD_REQUEST.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = UserDoesNotExistsException.class)
-//    public void getNewsFeedUserDoesNotExistsExceptionTest() {
-//
-//        ResponseEntity entityUser = socialMediaAppService.getNewsFeed(8);
-//        assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//    @Test(expected = PostsNotAvailableException.class)
-//    public void getNewsFeedPostsNotAvailableExceptionTest() {
-//        socialMediaAppService.createUser(9, "test");
-//        ResponseEntity entityUser = socialMediaAppService.getNewsFeed(9);
-//        assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
-//    }
-//
-//
-//}
+package com.socialmediaapp.serviceimpl;
+
+
+import com.socialmediaapp.exception.CustomConflictException;
+import com.socialmediaapp.exception.CustomNotFoundException;
+import com.socialmediaapp.model.PostModel;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
+/**
+ * Junit/Mockito test cases to unit test the API all the methods and business logics.
+ *
+ * @author atulzambre
+ */
+@RunWith(SpringRunner.class)
+public class SocialMediaAppServiceImplTest {
+    @InjectMocks
+    private SocialMediaAppServiceImpl socialMediaAppService;
+
+    @InjectMocks
+    private UserOperationsServiceImpl userOperationsService;
+
+
+    @Test(expected = CustomNotFoundException.class)
+    public void createNewPostNotFoundUserTest() {
+        ResponseEntity entityUser = socialMediaAppService.createNewPost("4","4","test post 4");
+        assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
+    }
+    @Test(expected = CustomNotFoundException.class)
+    public void createNewPostNotFoundTest() {
+        ResponseEntity entityUser = socialMediaAppService.createNewPost("4","4","test post 4");
+        assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
+    }
+
+    @Test
+    public void createNewPostTest() {
+        userOperationsService.createUser("1","test 1");
+        ResponseEntity entityUser = socialMediaAppService.createNewPost("1","1","test post 1");
+        assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
+    }
+
+    @Test
+    public void followTest(){
+        userOperationsService.createUser("5","test 5");
+        userOperationsService.createUser("6","test 6");
+        ResponseEntity entityUser = socialMediaAppService.follow("5","6");
+        assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
+    }
+
+    @Test(expected = CustomNotFoundException.class)
+    public void followUserNotFoundTest(){
+        ResponseEntity entityUser = socialMediaAppService.follow("7","6");
+        assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
+    }
+
+    @Test(expected = CustomConflictException.class)
+    public void followAlreadyFoundTest(){
+        ResponseEntity entityUser = socialMediaAppService.follow("5","6");
+        assertEquals(HttpStatus.CONFLICT.value(), entityUser.getStatusCodeValue());
+    }
+
+    @Test
+    public void unfollowTest(){
+        userOperationsService.createUser("8","test 8");
+        userOperationsService.createUser("9","test 9");
+        socialMediaAppService.follow("8","9");
+        ResponseEntity entityUser = socialMediaAppService.unFollow("8","9");
+        assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
+    }
+
+    @Test(expected = CustomNotFoundException.class)
+    public void unfollowUserNotFoundTest(){
+        ResponseEntity entityUser = socialMediaAppService.unFollow("10","6");
+        assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
+    }
+
+    @Test(expected = CustomConflictException.class)
+    public void unfollowAlreadyTest(){
+        ResponseEntity entityUser = socialMediaAppService.unFollow("8","9");
+        assertEquals(HttpStatus.CONFLICT.value(), entityUser.getStatusCodeValue());
+    }
+
+    @Test
+    public void getNewFeedTest(){
+
+        userOperationsService.createUser("11","test 11");
+        userOperationsService.createUser("12","test 12");
+        userOperationsService.createUser("13","test 13");
+        socialMediaAppService.createNewPost("11","1","test 1");
+        socialMediaAppService.createNewPost("11","2","test 2");
+        socialMediaAppService.createNewPost("11","3","test 3");
+        socialMediaAppService.createNewPost("11","4","test 4");
+        socialMediaAppService.createNewPost("11","5","test 5");
+        socialMediaAppService.createNewPost("11","6","test 6");
+        socialMediaAppService.createNewPost("11","7","test 7");
+        socialMediaAppService.createNewPost("11","8","test 8");
+        socialMediaAppService.createNewPost("11","9","test 9");
+        socialMediaAppService.createNewPost("11","10","test 10");
+        socialMediaAppService.createNewPost("12","1","test 1");
+        socialMediaAppService.createNewPost("12","2","test 2");
+        socialMediaAppService.createNewPost("12","3","test 3");
+        socialMediaAppService.createNewPost("12","4","test 4");
+        socialMediaAppService.createNewPost("12","5","test 5");
+        socialMediaAppService.createNewPost("12","6","test 6");
+        socialMediaAppService.createNewPost("12","7","test 7");
+        socialMediaAppService.createNewPost("13","1","test 1");
+        socialMediaAppService.createNewPost("13","2","test 2");
+        socialMediaAppService.createNewPost("13","3","test 3");
+        socialMediaAppService.createNewPost("13","4","test 4");
+        socialMediaAppService.createNewPost("13","5","test 5");
+        socialMediaAppService.createNewPost("13","6","test 6");
+        socialMediaAppService.createNewPost("13","7","test 7");
+        socialMediaAppService.follow("11","12");
+        socialMediaAppService.follow("11","13");
+        ResponseEntity<List<PostModel>> postModels= socialMediaAppService.getNewsFeed("11");
+        assertEquals(20, postModels.getBody().size());
+    }
+
+
+
+}
