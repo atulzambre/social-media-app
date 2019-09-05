@@ -1,23 +1,23 @@
 package com.socialmediaapp.model;
 
 public class CreatePostRequestModel {
-    private int userId;
-    private int postId;
+    private String userId;
+    private String postId;
     private String postContent;
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public int getPostId() {
+    public String getPostId() {
         return postId;
     }
 
-    public void setPostId(int postId) {
+    public void setPostId(String postId) {
         this.postId = postId;
     }
 

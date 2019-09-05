@@ -1,14 +1,19 @@
 package com.socialmediaapp.model;
 
 public class FollowModel {
-    private int followeeId;
+    private String followeeId;
     private String followeeName;
 
-    public int getFolloweeId() {
+    public FollowModel(String followeeId, String followeeName) {
+        this.followeeId = followeeId;
+        this.followeeName = followeeName;
+    }
+
+    public String getFolloweeId() {
         return followeeId;
     }
 
-    public void setFolloweeId(int followeeId) {
+    public void setFolloweeId(String followeeId) {
         this.followeeId = followeeId;
     }
 

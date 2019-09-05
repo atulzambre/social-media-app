@@ -46,7 +46,7 @@ class SocialMediaAppController {
 
     //getNewsFeed() will return the to 20 recent post made by user or their followee else throw exception
     @GetMapping("getNewsFeed")
-    public ResponseEntity getNewsFeed(@RequestParam("userId") int userId) {
+    public ResponseEntity getNewsFeed(@RequestParam("userId") String userId) {
         return socialMediaAppService.getNewsFeed(userId);
     }
 
