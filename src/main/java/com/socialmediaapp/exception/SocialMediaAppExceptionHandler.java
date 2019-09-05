@@ -32,8 +32,8 @@ class SocialMediaAppExceptionHandler extends ResponseEntityExceptionHandler {
 
     //RequestParamException handles all the exceptions related to bad request parameters.
     //BAD REQUEST
-    @ExceptionHandler(RequestParamException.class)
-    public final ResponseEntity<ErrorResponseModel> requestParamExceptions(RequestParamException ex, WebRequest web) {
+    @ExceptionHandler(CustomBadRequestException.class)
+    public final ResponseEntity<ErrorResponseModel> requestParamExceptions(CustomBadRequestException ex, WebRequest web) {
         ErrorResponseModel errorResponseModel = new ErrorResponseModel.ErrorResponseExceptionBuilder(HttpStatus.BAD_REQUEST.value()).error(HttpStatus.BAD_REQUEST.toString()).message(ex.getMessage()).timestamp(LocalDateTime.now()).build();
         ResponseEntity<ErrorResponseModel> requestParamExceptionsResponse;
         requestParamExceptionsResponse = new ResponseEntity<>(errorResponseModel, HttpStatus.BAD_REQUEST);
@@ -42,8 +42,8 @@ class SocialMediaAppExceptionHandler extends ResponseEntityExceptionHandler {
 
     //UserAlreadyExistsException handles all the Conflict exceptions i.e already exists in the collection type.
     //CONFLICT
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public final ResponseEntity<ErrorResponseModel> userAlreadyExistsExceptions(UserAlreadyExistsException ex, WebRequest web) {
+    @ExceptionHandler(CustomConflictException.class)
+    public final ResponseEntity<ErrorResponseModel> userAlreadyExistsExceptions(CustomConflictException ex, WebRequest web) {
         ErrorResponseModel errorResponseModel = new ErrorResponseModel.ErrorResponseExceptionBuilder(HttpStatus.CONFLICT.value()).error(HttpStatus.CONFLICT.toString()).message(ex.getMessage()).timestamp(LocalDateTime.now()).build();
         ResponseEntity<ErrorResponseModel> userAlreadyExistsExceptionsResponse;
         userAlreadyExistsExceptionsResponse = new ResponseEntity<>(errorResponseModel, HttpStatus.CONFLICT);
@@ -52,21 +52,12 @@ class SocialMediaAppExceptionHandler extends ResponseEntityExceptionHandler {
 
     //UserDoesNotExistsException handles exceptions related to data not found.
     //NOT FOUND
-    @ExceptionHandler(UserDoesNotExistsException.class)
-    public final ResponseEntity<ErrorResponseModel> userDoesNotExistsException(UserDoesNotExistsException ex, WebRequest web) {
+    @ExceptionHandler(CustomNotFoundException.class)
+    public final ResponseEntity<ErrorResponseModel> userDoesNotExistsException(CustomNotFoundException ex, WebRequest web) {
         ErrorResponseModel errorResponseModel = new ErrorResponseModel.ErrorResponseExceptionBuilder(HttpStatus.NOT_FOUND.value()).error(HttpStatus.NOT_FOUND.toString()).message(ex.getMessage()).timestamp(LocalDateTime.now()).build();
         ResponseEntity<ErrorResponseModel> userDoesNotExistsExceptionResponse;
         userDoesNotExistsExceptionResponse = new ResponseEntity<>(errorResponseModel, HttpStatus.NOT_FOUND);
         return userDoesNotExistsExceptionResponse;
     }
 
-    //PostsNotAvailableException handles exceptions related to post not found.
-    //NOT FOUND
-    @ExceptionHandler(PostsNotAvailableException.class)
-    public final ResponseEntity<ErrorResponseModel> postsNotAvailableException(PostsNotAvailableException ex, WebRequest web) {
-        ErrorResponseModel errorResponseModel = new ErrorResponseModel.ErrorResponseExceptionBuilder(HttpStatus.NOT_FOUND.value()).error(HttpStatus.NOT_FOUND.toString()).message(ex.getMessage()).timestamp(LocalDateTime.now()).build();
-        ResponseEntity<ErrorResponseModel> postsNotAvailableExceptionResponse;
-        postsNotAvailableExceptionResponse = new ResponseEntity<>(errorResponseModel, HttpStatus.NOT_FOUND);
-        return postsNotAvailableExceptionResponse;
-    }
 }

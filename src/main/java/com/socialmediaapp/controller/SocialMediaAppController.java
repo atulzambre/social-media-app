@@ -4,6 +4,7 @@ import com.socialmediaapp.model.CreatePostRequestModel;
 import com.socialmediaapp.model.FollowUnFollowRequestModel;
 import com.socialmediaapp.model.UserModel;
 import com.socialmediaapp.service.SocialMediaAppService;
+import com.socialmediaapp.service.UserOperationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +26,20 @@ class SocialMediaAppController {
     @Autowired
     private SocialMediaAppService socialMediaAppService;
 
+    @Autowired
+    private UserOperationsService userOperationsService;
+
 
     // getAllUsers() will return the Users from the Collection else throw exception
     @GetMapping("getAllUsers")
     public ResponseEntity getAllUsers() {
-        return socialMediaAppService.getAllUsers();
+        return userOperationsService.getAllUsers();
     }
 
     //createUser() will return the successfully created User else throw exception
     @PostMapping("createUser")
     public ResponseEntity createUser(@RequestBody UserModel userRequest) {
-        return socialMediaAppService.createUser(userRequest.getUserId(), userRequest.getUserName());
+        return userOperationsService.createUser(userRequest.getUserId(), userRequest.getUserName());
     }
 
     //createNewPost() will return the successfully created posts else throw exception

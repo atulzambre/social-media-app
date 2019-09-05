@@ -4,10 +4,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface SocialMediaAppService {
 
-    ResponseEntity createUser(String userId, String userName);
-
-    ResponseEntity getAllUsers();
-
     ResponseEntity createNewPost(String userId, String postID, String postContent);
 
     ResponseEntity follow(String followerId, String followeeId);

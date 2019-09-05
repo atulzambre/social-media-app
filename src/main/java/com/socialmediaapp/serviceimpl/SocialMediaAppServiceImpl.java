@@ -1,7 +1,7 @@
 package com.socialmediaapp.serviceimpl;
 
-import com.socialmediaapp.exception.UserAlreadyExistsException;
-import com.socialmediaapp.exception.UserDoesNotExistsException;
+import com.socialmediaapp.exception.CustomConflictException;
+import com.socialmediaapp.exception.CustomNotFoundException;
 import com.socialmediaapp.model.ErrorMessageConstantModel;
 import com.socialmediaapp.model.PostModel;
 import com.socialmediaapp.model.UserModel;
@@ -10,9 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -24,46 +24,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 @Service
 public class SocialMediaAppServiceImpl implements SocialMediaAppService {
-    private static final CopyOnWriteArrayList<UserModel> userCollectionDatabase = new CopyOnWriteArrayList<>();
+    protected static final CopyOnWriteArrayList<UserModel> userCollectionDatabase = new CopyOnWriteArrayList<>();
 
-    private static final Map<String, UserModel> userIdIndex = new HashMap<>();
-
-
-    /**
-     * createUser method stores the userID and userName in the collection. Initially it checks for the conditions.
-     * for every User userID must me unique and userName should not me empty.
-     * if the conditions are not satisfied then it throw exceptions which is then catch in CustomExceptionHandler.
-     *
-     * @param userId
-     * @param userName
-     * @return Successfully stored user object wrapping in ResponseEntity.
-     */
-    public ResponseEntity createUser(String userId, String userName) {
-        if (Objects.nonNull(userIdIndex.get(userId)))
-            throw new UserAlreadyExistsException("User Already Exists!");
-        UserModel newUser = new UserModel();
-        newUser.setUserId(userId);
-        newUser.setUserName(userName);
-        synchronized (this) {
-            userCollectionDatabase.add(newUser);
-            userIdIndex.put(userId, newUser);
-        }
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
-    }
-
-    /**
-     * getAllUsers method retrieves all the available Users in the collection. Initially it checks for the collection emptiness.
-     * if the collection is empty then it throws exceptions which is then catch in CustomExceptionHandler.
-     *
-     * @return List of Users available in the collection.
-     */
-    @Override
-    public ResponseEntity getAllUsers() {
-            if (userCollectionDatabase.isEmpty()) {
-                throw new UserDoesNotExistsException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
-            }
-        return new ResponseEntity<>(userCollectionDatabase, HttpStatus.OK);
-    }
+    protected static final Map<String, UserModel> userIdIndex = new ConcurrentHashMap<>();
 
     /**
      * createNewPost method stores the new posts for the user. Initially it checks for the conditions.
@@ -79,17 +42,19 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     @Override
     public ResponseEntity createNewPost(String userId, String postId, String postContent) {
         if (!Objects.nonNull(userIdIndex.get(userId)))
-            throw new UserDoesNotExistsException("User Does Not Exists!");
+            throw new CustomNotFoundException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
         UserModel user = userIdIndex.get(userId);
         if (Objects.nonNull(user.getPostModelMap().get(postId)))
-            throw new UserAlreadyExistsException("Post is already present!");
+            throw new CustomConflictException(ErrorMessageConstantModel.POST_ALREADY_EXISTS);
 
         PostModel newPost = new PostModel();
-        newPost.setPostContent(postContent);
-        newPost.setPostId(postId);
-        newPost.setPostCreated();
-        user.getPostModelMap().put(postId, newPost);
-        user.getPosts().add(newPost);
+        synchronized (this) {
+            newPost.setPostContent(postContent);
+            newPost.setPostId(postId);
+            newPost.setPostCreated();
+            user.getPostModelMap().put(postId, newPost);
+            user.getPosts().add(newPost);
+        }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -108,11 +73,12 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     @Override
     public ResponseEntity follow(String followerId, String followeeId) {
         if(!(Objects.nonNull(userIdIndex.get(followerId))&&Objects.nonNull(userIdIndex.get(followeeId))))
-            throw new UserDoesNotExistsException("User Does Not Exists");
+            throw new CustomNotFoundException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
         if(userIdIndex.get(followerId).getFollowees().contains(followeeId))
-            throw new UserAlreadyExistsException("Already Following this user");
-        UserModel followeeUser=userIdIndex.get(followeeId);
-        userIdIndex.get(followerId).getFollowees().add(followeeId);
+            throw new CustomConflictException(ErrorMessageConstantModel.ALREADY_FOLLOWING);
+        synchronized (this) {
+            userIdIndex.get(followerId).getFollowees().add(followeeId);
+        }
         return new ResponseEntity(userIdIndex.get(followerId),HttpStatus.OK);
     }
 
@@ -130,11 +96,13 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     @Override
     public ResponseEntity unFollow(String followerId, String followeeId) {
         if(!(Objects.nonNull(userIdIndex.get(followerId))&&Objects.nonNull(userIdIndex.get(followeeId))))
-            throw new UserDoesNotExistsException("User Does Not Exists");
+            throw new CustomNotFoundException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
         if(!userIdIndex.get(followerId).getFollowees().contains(followeeId))
-            throw new UserAlreadyExistsException("Already UnFollowing this user");
-        UserModel followeeUser=userIdIndex.get(followeeId);
-        userIdIndex.get(followerId).getFollowees().remove(followeeId);
+            throw new CustomConflictException(ErrorMessageConstantModel.NOT_FOLLOWING_USER);
+
+        synchronized (this) {
+            userIdIndex.get(followerId).getFollowees().remove(followeeId);
+        }
         return new ResponseEntity(userIdIndex.get(followerId),HttpStatus.OK);
 
     }
@@ -151,6 +119,11 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
      */
     @Override
     public ResponseEntity getNewsFeed(String userId) {
+        if (!Objects.nonNull(userIdIndex.get(userId)))
+            throw new CustomNotFoundException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
+
+
+
 //        UserModel userModel;
 //        List<UserModel> proxyuserCollectionDatabase = new ArrayList<>(userCollectionDatabase);
 //        List<PostModel> newsFeedModel = null;
