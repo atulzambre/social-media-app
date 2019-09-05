@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SocialMediaAppServiceImpl implements SocialMediaAppService {
-    protected static final Map<String, UserModel> userIdIndex = new ConcurrentHashMap<>();
+    static final Map<String, UserModel> userIdIndex = new ConcurrentHashMap<>();
 
     /**
      * createNewPost method stores the new posts for the user.
      *
-     * @param userId
+     * @param userId      Users unique key
      * @param postId
      * @param postContent
      * @return User with all its posts.
@@ -69,7 +69,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         synchronized (this) {
             userIdIndex.get(followerId).getFollowees().add(followeeId);
         }
-        return new ResponseEntity(userIdIndex.get(followerId), HttpStatus.OK);
+        return new ResponseEntity<>(userIdIndex.get(followerId), HttpStatus.OK);
     }
 
 
@@ -90,7 +90,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         synchronized (this) {
             userIdIndex.get(followerId).getFollowees().remove(followeeId);
         }
-        return new ResponseEntity(userIdIndex.get(followerId), HttpStatus.OK);
+        return new ResponseEntity<>(userIdIndex.get(followerId), HttpStatus.OK);
     }
 
 
