@@ -48,4 +48,14 @@ public class UserModel {
     public void setFollowees(Set<String> followees) {
         this.followees = followees;
     }
+    public List<PostModel> getTopPosts(int numberOfPosts) {
+        int size = posts.size();
+        if(size<=20){
+            return posts;
+        }
+        else{
+            return posts.subList(size - 21, size);
+        }
+
+    }
 }
