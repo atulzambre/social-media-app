@@ -50,6 +50,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             newPost.setPostContent(postContent);
             newPost.setPostId(postId);
             newPost.setPostCreated();
+            newPost.setUserId(userId);
             user.getPostModelMap().put(postId, newPost);
             user.getPosts().add(newPost);
         }

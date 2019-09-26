@@ -48,7 +48,7 @@ class SocialMediaAppController {
 
     //createNewPost() will return the successfully created posts else throw exception
     @PostMapping(value = "createNewPost", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createNewPost(@Valid @RequestBody CreatePostRequestModel postRequestModel) {
+    public ResponseEntity createNewPost(@Valid @RequestBody CreatePostRequestModel postRequestModel) throws InterruptedException {
         return socialMediaAppService.createNewPost(postRequestModel.getUserId(), postRequestModel.getPostId(), postRequestModel.getPostContent());
     }
 

@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface SocialMediaAppService {
 
-    ResponseEntity createNewPost(String userId, String postID, String postContent);
+    ResponseEntity createNewPost(String userId, String postID, String postContent) throws InterruptedException;
 
     ResponseEntity follow(String followerId, String followeeId);
 
