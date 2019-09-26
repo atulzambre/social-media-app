@@ -79,7 +79,7 @@ public class SocialMediaAppControllerTest {
         PostModel postModel = new PostModel();
         postModel.setPostId("1");
         postModel.setPostContent("test");
-        userModel.setPosts(Collections.singletonList(postModel));
+        userModel.setPosts(Collections.singleton(postModel));
         CreatePostRequestModel createPostRequestModel = new CreatePostRequestModel();
         createPostRequestModel.setUserId("1");
         createPostRequestModel.setPostId("1");

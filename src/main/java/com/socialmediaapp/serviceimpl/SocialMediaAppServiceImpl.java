@@ -10,7 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     static final Map<String, UserModel> userIdIndex = new ConcurrentHashMap<>();
+    public final Integer NO_OF_POSTS=20;
 
     /**
      * createNewPost method stores the new posts for the user.
@@ -106,14 +110,10 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             throw new CustomNotFoundException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
 
         UserModel user = userIdIndex.get(userId);
-        List<PostModel> allFolloweePosts = new ArrayList<>();
-        synchronized (this) {
-            for (String followeeId : user.getFollowees()) {
-                allFolloweePosts.addAll(userIdIndex.get(followeeId).getTopPosts(20));
-            }
-            allFolloweePosts.addAll(user.getTopPosts(20));
-        }
-        allFolloweePosts.sort(Comparator.comparing(PostModel::getPostCreated));
-        return new ResponseEntity(allFolloweePosts.stream().limit(20).collect(Collectors.toList()), HttpStatus.OK);
+        Set<PostModel> allPosts = new TreeSet<>(user.getTopPosts(NO_OF_POSTS));
+        Set<PostModel>allFolloweePosts=user.getFollowees().stream().map(s->userIdIndex.get(s).getTopPosts(NO_OF_POSTS)).flatMap(s->s.stream()).collect(Collectors.toSet());
+        allPosts.addAll(allFolloweePosts);
+
+        return new ResponseEntity(allPosts.stream().limit(NO_OF_POSTS).collect(Collectors.toList()), HttpStatus.OK);
     }
 }

@@ -2,7 +2,7 @@ package com.socialmediaapp.model;
 
 import java.time.LocalDateTime;
 
-public class PostModel {
+public class PostModel implements Comparable<PostModel>{
     private String postId;
     private String postContent;
     private LocalDateTime postCreated;
@@ -31,4 +31,8 @@ public class PostModel {
         this.postCreated = LocalDateTime.now();
     }
 
+    @Override
+    public int compareTo(PostModel o) {
+        return o.getPostCreated().compareTo(this.getPostCreated());
+    }
 }

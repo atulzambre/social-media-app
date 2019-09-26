@@ -1,5 +1,6 @@
 package com.socialmediaapp.controller;
 
+import com.socialmediaapp.exception.CustomBadRequestException;
 import com.socialmediaapp.model.CreatePostRequestModel;
 import com.socialmediaapp.model.FollowUnFollowRequestModel;
 import com.socialmediaapp.model.UserModel;
@@ -60,12 +61,16 @@ class SocialMediaAppController {
     //follow() will follow the user and return the user else throw exception
     @PutMapping(value = "follow", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity follow(@NotNull @RequestBody FollowUnFollowRequestModel followRequestModel) {
+        if(followRequestModel.getFolloweeId()==followRequestModel.getFollowerId())
+            throw new CustomBadRequestException("Can not follow yourself!");
         return socialMediaAppService.follow(followRequestModel.getFollowerId(), followRequestModel.getFolloweeId());
     }
 
     //unfollow() will unfollow the user and return the user else throw exception
     @PutMapping(value = "unfollow", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity unFollow(@NotNull @RequestBody FollowUnFollowRequestModel unFollowRequestModel) {
+        if(unFollowRequestModel.getFolloweeId()==unFollowRequestModel.getFollowerId())
+            throw new CustomBadRequestException("Can not Unfollow yourself!");
         return socialMediaAppService.unFollow(unFollowRequestModel.getFollowerId(), unFollowRequestModel.getFolloweeId());
     }
 
