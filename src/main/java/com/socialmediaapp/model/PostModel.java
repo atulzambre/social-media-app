@@ -3,11 +3,20 @@ package com.socialmediaapp.model;
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
-public class PostModel implements Comparable<PostModel>{
+public class PostModel implements Comparable<PostModel> {
     private String userId;
     private String postId;
     private String postContent;
     private LocalDateTime postCreated;
+
+    public PostModel() {
+    }
+
+    public PostModel(String userId, String postId, String postContent) {
+        this.userId = userId;
+        this.postId = postId;
+        this.postContent = postContent;
+    }
 
     public String getUserId() {
         return userId;
@@ -37,11 +46,10 @@ public class PostModel implements Comparable<PostModel>{
         return postCreated;
     }
 
-    public void setPostCreated(){
+    public void setPostCreated() {
         try {
             TimeUnit.MILLISECONDS.sleep(1);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
         this.postCreated = LocalDateTime.now();

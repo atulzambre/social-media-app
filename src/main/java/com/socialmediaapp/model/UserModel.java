@@ -14,6 +14,7 @@ public class UserModel {
     private Set<PostModel> posts = new TreeSet<>();
     private Set<String> followees = new HashSet<>();
 
+
     public Set<PostModel> getPosts() {
         return posts;
     }

@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 @Service
 public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     static final Map<String, UserModel> userIdIndex = new ConcurrentHashMap<>();
-    public final Integer NO_OF_POSTS=20;
+    public final Integer NO_OF_POSTS = 20;
 
     /**
      * createNewPost method stores the new posts for the user.
@@ -45,12 +46,10 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
         if (Objects.nonNull(user.getPostModelMap().get(postId)))
             throw new CustomConflictException(ErrorMessageConstantModel.POST_ALREADY_EXISTS);
 
-        PostModel newPost = new PostModel();
+
         synchronized (this) {
-            newPost.setPostContent(postContent);
-            newPost.setPostId(postId);
+            PostModel newPost = new PostModel(userId,postId,postContent);
             newPost.setPostCreated();
-            newPost.setUserId(userId);
             user.getPostModelMap().put(postId, newPost);
             user.getPosts().add(newPost);
         }
@@ -111,10 +110,8 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             throw new CustomNotFoundException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
 
         UserModel user = userIdIndex.get(userId);
-        Set<PostModel> allPosts = new TreeSet<>(user.getTopPosts(NO_OF_POSTS));
-        Set<PostModel>allFolloweePosts=user.getFollowees().stream().map(s->userIdIndex.get(s).getTopPosts(NO_OF_POSTS)).flatMap(s->s.stream()).collect(Collectors.toSet());
-        allPosts.addAll(allFolloweePosts);
+        Set<PostModel> allPosts = user.getFollowees().stream().map(s -> userIdIndex.get(s).getTopPosts(NO_OF_POSTS)).flatMap(s -> s.stream()).collect(Collectors.toCollection(TreeSet::new));
+        return new ResponseEntity(allPosts.stream().limit(NO_OF_POSTS).collect((Collector<? super PostModel, Object, TreeSet<Object>>) Collectors.toCollection(TreeSet::new)), HttpStatus.OK);
 
-        return new ResponseEntity(allPosts.stream().limit(NO_OF_POSTS).collect(Collectors.toList()), HttpStatus.OK);
     }
 }

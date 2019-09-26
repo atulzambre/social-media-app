@@ -26,8 +26,6 @@ public class ErrorMessageConstantModel {
     public static final String POST_ALREADY_EXISTS = "This post already exists. Please try with different postID.";
 
 
-
-
     private ErrorMessageConstantModel() {
     }
 

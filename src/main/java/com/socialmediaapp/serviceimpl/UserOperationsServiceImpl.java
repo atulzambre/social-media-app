@@ -28,6 +28,7 @@ public class UserOperationsServiceImpl implements UserOperationsService {
         UserModel newUser = new UserModel();
         newUser.setUserId(userId);
         newUser.setUserName(userName);
+        newUser.getFollowees().add(userId);
         synchronized (this) {
             SocialMediaAppServiceImpl.userIdIndex.put(userId, newUser);
         }
