@@ -39,7 +39,7 @@ public class PostModel implements Comparable<PostModel>{
 
     public void setPostCreated(){
         try {
-            TimeUnit.MILLISECONDS.sleep(20);
+            TimeUnit.MILLISECONDS.sleep(1);
         }
         catch (Exception e){
 
