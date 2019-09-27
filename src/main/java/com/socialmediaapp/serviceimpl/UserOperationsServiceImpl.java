@@ -18,8 +18,8 @@ public class UserOperationsServiceImpl implements UserOperationsService {
      * for every User userID must me unique and userName should not me empty.
      * if the conditions are not satisfied then it throw exceptions which is then catch in CustomExceptionHandler.
      *
-     * @param userId
-     * @param userName
+     * @param userId Users Unique ID
+     * @param userName Users Name
      * @return Successfully stored user object wrapping in ResponseEntity.
      */
     public ResponseEntity createUser(String userId, String userName) {

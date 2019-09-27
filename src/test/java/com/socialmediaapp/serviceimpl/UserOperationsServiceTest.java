@@ -1,7 +1,6 @@
 package com.socialmediaapp.serviceimpl;
 
 import com.socialmediaapp.exception.CustomConflictException;
-import com.socialmediaapp.model.UserModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,7 +23,6 @@ public class UserOperationsServiceTest {
     @Test
     public void createUsersTest() {
         ResponseEntity entityUser = userOperationsService.createUser("3", "test 3");
-        UserModel user = (UserModel) entityUser.getBody();
         assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
 
     }
@@ -33,7 +31,6 @@ public class UserOperationsServiceTest {
     public void createUsersAlreadyExistsTest() {
         userOperationsService.createUser("2", "test 2");
         ResponseEntity entityUser = userOperationsService.createUser("2", "test 2");
-        UserModel user = (UserModel) entityUser.getBody();
         assertEquals(HttpStatus.CONFLICT.value(), entityUser.getStatusCodeValue());
 
     }

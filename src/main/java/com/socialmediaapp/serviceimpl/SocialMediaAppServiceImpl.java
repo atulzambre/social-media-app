@@ -10,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -28,14 +25,14 @@ import java.util.stream.Collectors;
 @Service
 public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     static final Map<String, UserModel> userIdIndex = new ConcurrentHashMap<>();
-    public final Integer NO_OF_POSTS = 20;
+    private final Integer NO_OF_POSTS = 20;
 
     /**
      * createNewPost method stores the new posts for the user.
      *
      * @param userId      Users unique key
-     * @param postId
-     * @param postContent
+     * @param postId       Posts Unique Key
+     * @param postContent   Post Message
      * @return User with all its posts.
      */
     @Override
@@ -48,7 +45,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
 
 
         synchronized (this) {
-            PostModel newPost = new PostModel(userId,postId,postContent);
+            PostModel newPost = new PostModel(userId, postId, postContent);
             newPost.setPostCreated();
             user.getPostModelMap().put(postId, newPost);
             user.getPosts().add(newPost);
@@ -60,8 +57,8 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     /**
      * follow method stores information about one user following other to get the feeds.
      *
-     * @param followerId
-     * @param followeeId
+     * @param followerId    Follower Unique ID
+     * @param followeeId    Followee Unique ID
      * @return User with all the followee information.
      */
     @Override
@@ -80,8 +77,8 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     /**
      * unfollow method removes information about one user following other and should not get the feeds.
      *
-     * @param followerId
-     * @param followeeId
+     * @param followerId    Follower Unique ID
+     * @param followeeId    Followee Unique ID
      * @return User with all the followee information.
      */
     @Override
@@ -101,7 +98,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     /**
      * getNewsFeed method retrieves maximum top 20 recent feeds from User and its followees.
      *
-     * @param userId
+     * @param userId Users Unique ID
      * @return Maximum top 20 recent posts (returns with postID, postContent and postCreation to better understand the recentness).
      */
     @Override
@@ -110,7 +107,7 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
             throw new CustomNotFoundException(ErrorMessageConstantModel.USER_DOES_NOT_EXISTS);
 
         UserModel user = userIdIndex.get(userId);
-        Set<PostModel> allPosts = user.getFollowees().stream().map(s -> userIdIndex.get(s).getTopPosts(NO_OF_POSTS)).flatMap(s -> s.stream()).collect(Collectors.toCollection(TreeSet::new));
+        Set<PostModel> allPosts = user.getFollowees().stream().map(s -> userIdIndex.get(s).getTopPosts(NO_OF_POSTS)).flatMap(Collection::stream).collect(Collectors.toCollection(TreeSet::new));
         return new ResponseEntity(allPosts.stream().limit(NO_OF_POSTS).collect((Collector<? super PostModel, Object, TreeSet<Object>>) Collectors.toCollection(TreeSet::new)), HttpStatus.OK);
 
     }

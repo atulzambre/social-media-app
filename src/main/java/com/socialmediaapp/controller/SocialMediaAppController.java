@@ -2,6 +2,7 @@ package com.socialmediaapp.controller;
 
 import com.socialmediaapp.exception.CustomBadRequestException;
 import com.socialmediaapp.model.CreatePostRequestModel;
+import com.socialmediaapp.model.ErrorMessageConstantModel;
 import com.socialmediaapp.model.FollowUnFollowRequestModel;
 import com.socialmediaapp.model.UserModel;
 import com.socialmediaapp.service.SocialMediaAppService;
@@ -48,7 +49,7 @@ class SocialMediaAppController {
 
     //createNewPost() will return the successfully created posts else throw exception
     @PostMapping(value = "createNewPost", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createNewPost(@Valid @RequestBody CreatePostRequestModel postRequestModel) throws InterruptedException {
+    public ResponseEntity createNewPost(@Valid @RequestBody CreatePostRequestModel postRequestModel) {
         return socialMediaAppService.createNewPost(postRequestModel.getUserId(), postRequestModel.getPostId(), postRequestModel.getPostContent());
     }
 
@@ -62,7 +63,7 @@ class SocialMediaAppController {
     @PutMapping(value = "follow", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity follow(@NotNull @RequestBody FollowUnFollowRequestModel followRequestModel) {
         if (followRequestModel.getFolloweeId().equals(followRequestModel.getFollowerId()))
-            throw new CustomBadRequestException("Can not follow yourself!");
+            throw new CustomBadRequestException(ErrorMessageConstantModel.CAN_NOT_FOLLOW_SELF);
         return socialMediaAppService.follow(followRequestModel.getFollowerId(), followRequestModel.getFolloweeId());
     }
 
@@ -70,7 +71,7 @@ class SocialMediaAppController {
     @PutMapping(value = "unfollow", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity unFollow(@NotNull @RequestBody FollowUnFollowRequestModel unFollowRequestModel) {
         if (unFollowRequestModel.getFolloweeId().equals(unFollowRequestModel.getFollowerId()))
-            throw new CustomBadRequestException("Can not Unfollow yourself!");
+            throw new CustomBadRequestException(ErrorMessageConstantModel.CAN_NOT_UNFOLLOW_SELF);
         return socialMediaAppService.unFollow(unFollowRequestModel.getFollowerId(), unFollowRequestModel.getFolloweeId());
     }
 

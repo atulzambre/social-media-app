@@ -42,7 +42,7 @@ public class PostModel implements Comparable<PostModel> {
         this.postContent = postContent;
     }
 
-    public LocalDateTime getPostCreated() {
+    private LocalDateTime getPostCreated() {
         return postCreated;
     }
 
@@ -50,7 +50,7 @@ public class PostModel implements Comparable<PostModel> {
         try {
             TimeUnit.MILLISECONDS.sleep(1);
         } catch (Exception e) {
-
+                System.out.println(e.getMessage());
         }
         this.postCreated = LocalDateTime.now();
     }

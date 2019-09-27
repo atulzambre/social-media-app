@@ -4,7 +4,6 @@ package com.socialmediaapp.serviceimpl;
 import com.socialmediaapp.exception.CustomConflictException;
 import com.socialmediaapp.exception.CustomNotFoundException;
 import com.socialmediaapp.model.PostModel;
-import com.socialmediaapp.model.UserModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -49,10 +46,6 @@ public class SocialMediaAppServiceImplTest {
         userOperationsService.createUser("1", "test 1");
         ResponseEntity entityUser = socialMediaAppService.createNewPost("1", "1", "test post 1");
         assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
-        UserModel userModel=new UserModel();
-        userModel= (UserModel) entityUser.getBody();
-
-
     }
 
     @Test
@@ -138,7 +131,7 @@ public class SocialMediaAppServiceImplTest {
         socialMediaAppService.createNewPost("13", "14", "test 13 post 14");
         socialMediaAppService.follow("11", "12");
         socialMediaAppService.follow("11", "13");
-        Set<PostModel> setModels = (Set<PostModel>) socialMediaAppService.getNewsFeed("11").getBody();
+        Set<PostModel> setModels = Collections.unmodifiableSet((Set<PostModel>) Objects.requireNonNull(socialMediaAppService.getNewsFeed("11").getBody()));
         List<PostModel> postModels = new ArrayList<>(setModels);
         assertEquals(20, postModels.size());
         assertEquals("test 13 post 14", postModels.get(0).getPostContent());
@@ -161,8 +154,6 @@ public class SocialMediaAppServiceImplTest {
         assertEquals("test 12 post 5", postModels.get(17).getPostContent());
         assertEquals("test 12 post 4", postModels.get(18).getPostContent());
         assertEquals("test 12 post 3", postModels.get(19).getPostContent());
-
-
 
 
     }
