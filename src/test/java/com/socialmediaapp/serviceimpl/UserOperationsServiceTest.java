@@ -21,14 +21,14 @@ public class UserOperationsServiceTest {
     private UserOperationsServiceImpl userOperationsService;
 
     @Test
-    public void createUsersTest() {
+    public void createUsers_ShouldCreateNewUserTest() {
         ResponseEntity entityUser = userOperationsService.createUser("3", "test 3");
         assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
 
     }
 
     @Test(expected = CustomConflictException.class)
-    public void createUsersAlreadyExistsTest() {
+    public void createUsers_UserAlreadyExists_ShouldThrowExceptionTest() {
         userOperationsService.createUser("2", "test 2");
         ResponseEntity entityUser = userOperationsService.createUser("2", "test 2");
         assertEquals(HttpStatus.CONFLICT.value(), entityUser.getStatusCodeValue());
@@ -36,7 +36,7 @@ public class UserOperationsServiceTest {
     }
 
     @Test
-    public void getAllUsersTest() {
+    public void getAllUsers_ShouldReturnAllTheUsersFromCollectionTest() {
         ResponseEntity entityUser = userOperationsService.getAllUsers();
         assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
 

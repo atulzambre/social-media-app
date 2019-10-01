@@ -46,7 +46,7 @@ public class SocialMediaAppControllerTest {
     private UserOperationsService userOperationsService;
 
     @Test
-    public void getAllUsersTest() throws Exception {
+    public void controllerGetAllUsers_ShouldReturnAllTheUsersFromCollectionTest() throws Exception {
         UserModel userModel = new UserModel();
         userModel.setUserId("1");
         userModel.setUserName("test");
@@ -57,7 +57,7 @@ public class SocialMediaAppControllerTest {
     }
 
     @Test
-    public void createUserTest() throws Exception {
+    public void controllerCreateUser_ShouldCreateNewUserTest() throws Exception {
         UserModel userModel = new UserModel();
         userModel.setUserId("1");
         userModel.setUserName("test");
@@ -72,7 +72,7 @@ public class SocialMediaAppControllerTest {
 
 
     @Test
-    public void createNewPostTest() throws Exception {
+    public void controllerCreateNewPost_ShouldCreateNewPostTest() throws Exception {
         UserModel userModel = new UserModel();
         userModel.setUserId("1");
         userModel.setUserName("test");
@@ -94,7 +94,7 @@ public class SocialMediaAppControllerTest {
     }
 
     @Test
-    public void getNewsFeedTest() throws Exception {
+    public void controllerGetNewsFeed_ShouldReturnPostsOfUserAndFolloweesTest() throws Exception {
 
         PostModel postModel = new PostModel();
         postModel.setPostId("1");
@@ -107,7 +107,7 @@ public class SocialMediaAppControllerTest {
     }
 
     @Test
-    public void followTest() throws Exception {
+    public void controllerFollowUser_ShouldFollowUserTest() throws Exception {
         UserModel userModel = new UserModel();
         userModel.setUserId("1");
         userModel.setUserName("test");
@@ -124,7 +124,7 @@ public class SocialMediaAppControllerTest {
     }
 
     @Test
-    public void unFollowTest() throws Exception {
+    public void controllerUnFollow_ShouldUnfollowUserTest() throws Exception {
         UserModel userModel = new UserModel();
         userModel.setUserId("1");
         userModel.setUserName("test");
