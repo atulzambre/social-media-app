@@ -4,8 +4,7 @@ package com.socialmediaapp.serviceimpl;
 import com.socialmediaapp.exception.CustomConflictException;
 import com.socialmediaapp.exception.CustomNotFoundException;
 import com.socialmediaapp.model.PostModel;
-import com.socialmediaapp.service.SocialMediaAppService;
-import com.socialmediaapp.service.UserOperationsService;
+import com.socialmediaapp.util.InitialSetUpTestUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,65 +22,28 @@ import static org.junit.Assert.assertEquals;
  *
  * @author atulzambre
  */
+@SuppressWarnings("ALL")
 @RunWith(SpringRunner.class)
-public class SocialMediaAppServiceImplTest {
+public class SocialMediaAppServiceImplTestUtil extends InitialSetUpTestUtil {
     @InjectMocks
-    private static SocialMediaAppService socialMediaAppService;
+    private static SocialMediaAppServiceImpl socialMediaAppService;
 
     @InjectMocks
-    private static UserOperationsService userOperationsService;
+    private static UserOperationsServiceImpl userOperationsService;
 
     @BeforeClass
-    public static void createUsersAndPosts_UsedForGetNewsFeed_ShouldCreateUsersAndPostsTest(){
-        socialMediaAppService = new SocialMediaAppServiceImpl();
-        userOperationsService= new UserOperationsServiceImpl();
-        userOperationsService.createUser("11", "test 11");
-        userOperationsService.createUser("12", "test 12");
-        userOperationsService.createUser("13", "test 13");
-        socialMediaAppService.createNewPost("11", "1", "test 11 post 1");
-        socialMediaAppService.createNewPost("11", "2", "test 11 post 2");
-        socialMediaAppService.createNewPost("11", "3", "test 11 post 3");
-        socialMediaAppService.createNewPost("11", "5", "test 11 post 5");
-        socialMediaAppService.createNewPost("11", "6", "test 11 post 6");
-        socialMediaAppService.createNewPost("11", "7", "test 11 post 7");
-        socialMediaAppService.createNewPost("11", "8", "test 11 post 8");
-        socialMediaAppService.createNewPost("11", "9", "test 11 post 9");
-        socialMediaAppService.createNewPost("11", "10", "test 11 post 10");
-        socialMediaAppService.createNewPost("12", "1", "test 12 post 1");
-        socialMediaAppService.createNewPost("12", "2", "test 12 post 2");
-        socialMediaAppService.createNewPost("12", "3", "test 12 post 3");
-        socialMediaAppService.createNewPost("12", "4", "test 12 post 4");
-        socialMediaAppService.createNewPost("12", "5", "test 12 post 5");
-        socialMediaAppService.createNewPost("12", "6", "test 12 post 6");
-        socialMediaAppService.createNewPost("12", "7", "test 12 post 7");
-        socialMediaAppService.createNewPost("13", "1", "test 13 post 1");
-        socialMediaAppService.createNewPost("13", "2", "test 13 post 2");
-        socialMediaAppService.createNewPost("13", "3", "test 13 post 3");
-        socialMediaAppService.createNewPost("13", "4", "test 13 post 4");
-        socialMediaAppService.createNewPost("13", "5", "test 13 post 5");
-        socialMediaAppService.createNewPost("13", "6", "test 13 post 6");
-        socialMediaAppService.createNewPost("13", "7", "test 13 post 7");
-        socialMediaAppService.createNewPost("13", "8", "test 13 post 8");
-        socialMediaAppService.createNewPost("13", "9", "test 13 post 9");
-        socialMediaAppService.createNewPost("13", "10", "test 13 post 10");
-        socialMediaAppService.createNewPost("13", "11", "test 13 post 11");
-        socialMediaAppService.createNewPost("13", "12", "test 13 post 12");
-        socialMediaAppService.createNewPost("11", "4", "test 11 post 4");
-        socialMediaAppService.createNewPost("13", "13", "test 13 post 13");
-        socialMediaAppService.createNewPost("13", "14", "test 13 post 14");
-        socialMediaAppService.follow("11", "12");
-        socialMediaAppService.follow("11", "13");
+    public static void testDoInitialize_ShouldCreateUsersAndPosts() {
+        InitialSetUpTestUtil.testDoInitialize_ShouldCreateUsersAndPosts();
     }
 
-
     @Test(expected = CustomNotFoundException.class)
-    public void createNewPost_UserNotPresent_ShouldThrowExceptionTest() {
+    public void testCreateNewPost_IfUserNotPresent_ShouldThrowException() {
         ResponseEntity entityUser = socialMediaAppService.createNewPost("4", "4", "test post 4");
         assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
     }
 
     @Test
-    public void createNewPost_ShouldCreateNewPostTest() {
+    public void testCreateNewPost_ShouldCreateNewPost() {
         userOperationsService.createUser("1", "test 1");
         ResponseEntity entityUser = socialMediaAppService.createNewPost("1", "1", "test post 1");
         assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
@@ -89,55 +51,52 @@ public class SocialMediaAppServiceImplTest {
 
 
     @Test
-    public void followUser_ShouldFollowUserTest() {
+    public void testFollowUser_ShouldFollowUser() {
         ResponseEntity entityUser = socialMediaAppService.follow("5", "6");
         assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
     }
 
     @Test(expected = CustomNotFoundException.class)
-    public void followUser_UserNotPreset_ShouldThrowExceptionTest() {
+    public void testFollowUser_IfUserNotPresent_ShouldThrowException() {
         ResponseEntity entityUser = socialMediaAppService.follow("7", "6");
         assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
     }
 
     @Test(expected = CustomConflictException.class)
-    public void followUser_AlreadyFollowingUser_ShouldThrowExceptionTest() {
-        userOperationsService.createUser("5", "test 5");
-        userOperationsService.createUser("6", "test 6");
-        socialMediaAppService.unFollow("5", "6");
+    public void testFollowUser_IfAlreadyFollowingUser_ShouldThrowException() {
+        socialMediaAppService.follow("5", "6");
         ResponseEntity entityUser = socialMediaAppService.follow("5", "6");
         assertEquals(HttpStatus.CONFLICT.value(), entityUser.getStatusCodeValue());
     }
 
     @Test
-    public void unfollowUser_ShouldUnfollowUserTest() {
-        userOperationsService.createUser("8", "test 8");
-        userOperationsService.createUser("9", "test 9");
+    public void testUnfollowUser_ShouldUnfollowUser() {
         socialMediaAppService.follow("8", "9");
         ResponseEntity entityUser = socialMediaAppService.unFollow("8", "9");
         assertEquals(HttpStatus.OK.value(), entityUser.getStatusCodeValue());
     }
 
     @Test(expected = CustomNotFoundException.class)
-    public void unfollowUser_UserNotPresent_ShouldThrowExceptionTest() {
+    public void testUnfollowUser_IfUserNotPresent_ShouldThrowException() {
         ResponseEntity entityUser = socialMediaAppService.unFollow("10", "6");
         assertEquals(HttpStatus.NOT_FOUND.value(), entityUser.getStatusCodeValue());
     }
 
     @Test(expected = CustomConflictException.class)
-    public void unfollowUser_NotFollowingGivenUser_ShouldThrowExceptionTest() {
+    public void testUnfollowUser_IfNotFollowingGivenUser_ShouldThrowException() {
         ResponseEntity entityUser = socialMediaAppService.unFollow("8", "9");
         assertEquals(HttpStatus.CONFLICT.value(), entityUser.getStatusCodeValue());
     }
 
     @Test
-    public void getNewsFeed_ValidateNumberOfPosts_ShouldReturn20PostsTest(){
+    public void testGetNewsFeed_ValidatePosts_ShouldReturnTop20LatestPosts() {
         Set<PostModel> setModels = Collections.unmodifiableSet((Set<PostModel>) Objects.requireNonNull(socialMediaAppService.getNewsFeed("11").getBody()));
         List<PostModel> postModels = new ArrayList<>(setModels);
         assertEquals(20, postModels.size());
     }
+
     @Test
-    public void getNewsFeed_ValidateTop5PostsFromUserAndFollowees_ShouldReturnLatestTop5PostsTest(){
+    public void testGetNewsFeed_ValidateTop5Posts_ShouldValidateTop5Posts() {
         Set<PostModel> setModels = Collections.unmodifiableSet((Set<PostModel>) Objects.requireNonNull(socialMediaAppService.getNewsFeed("11").getBody()));
         List<PostModel> postModels = new ArrayList<>(setModels);
         assertEquals("test 13 post 14", postModels.get(0).getPostContent());
@@ -148,7 +107,7 @@ public class SocialMediaAppServiceImplTest {
     }
 
     @Test
-    public void getNewsFeed_ValidateLast5PostsFromUserAndFollowees_ShouldReturnLast5PostsTest(){
+    public void testGetNewsFeed_ValidateLast5Posts_ShouldValidateLast5Posts() {
         Set<PostModel> setModels = Collections.unmodifiableSet((Set<PostModel>) Objects.requireNonNull(socialMediaAppService.getNewsFeed("11").getBody()));
         List<PostModel> postModels = new ArrayList<>(setModels);
         assertEquals("test 12 post 7", postModels.get(15).getPostContent());
@@ -159,7 +118,7 @@ public class SocialMediaAppServiceImplTest {
     }
 
     @Test
-    public void getNewsFeed_Validate10thPostFromUserOrFollowees_ShouldReturn10thPostTest(){
+    public void testGetNewsFeed_Validate10thPost_ShouldValidate10thPost() {
         Set<PostModel> setModels = Collections.unmodifiableSet((Set<PostModel>) Objects.requireNonNull(socialMediaAppService.getNewsFeed("11").getBody()));
         List<PostModel> postModels = new ArrayList<>(setModels);
         assertEquals("test 13 post 6", postModels.get(9).getPostContent());
@@ -167,20 +126,20 @@ public class SocialMediaAppServiceImplTest {
     }
 
     @Test
-    public void getNewsFeed_Validate15thPostFromUserOrFollowees_ShouldReturn15thPostTest(){
+    public void testGetNewsFeed_Validate15thPost_ShouldValidate15thPost() {
         Set<PostModel> setModels = Collections.unmodifiableSet((Set<PostModel>) Objects.requireNonNull(socialMediaAppService.getNewsFeed("11").getBody()));
         List<PostModel> postModels = new ArrayList<>(setModels);
         assertEquals("test 13 post 1", postModels.get(14).getPostContent());
     }
 
     @Test(expected = CustomNotFoundException.class)
-    public void getNewsFeed_UserNotPresent_ShouldThrowExceptionTest() {
+    public void testGetNewsFeed_IfUserNotPresent_ShouldThrowException() {
         ResponseEntity entity = socialMediaAppService.getNewsFeed("20");
         assertEquals(HttpStatus.NOT_FOUND.value(), entity.getStatusCodeValue());
     }
 
     @Test
-    public void getNewsFeed_ValidateLatestPost_ShouldReturnLatestPostTest(){
+    public void testGetNewsFeed_ValidateLatestPost_ShouldReturnLatestPost() {
         userOperationsService.createUser("14", "test 14");
         socialMediaAppService.createNewPost("14", "1", "test 14 Latest Post");
         Set<PostModel> setModels = Collections.unmodifiableSet((Set<PostModel>) Objects.requireNonNull(socialMediaAppService.getNewsFeed("14").getBody()));
@@ -188,6 +147,14 @@ public class SocialMediaAppServiceImplTest {
         assertEquals(1, postModels.size());
         assertEquals("test 14 Latest Post", postModels.get(0).getPostContent());
 
+    }
+
+    @Test
+    public void testGetNewsFeed_IfNoPost_ShouldReturnBlankResponse() {
+        userOperationsService.createUser("15", "test 15");
+        Set<PostModel> setModels = Collections.unmodifiableSet((Set<PostModel>) Objects.requireNonNull(socialMediaAppService.getNewsFeed("15").getBody()));
+        List<PostModel> postModels = new ArrayList<>(setModels);
+        assertEquals(0, postModels.size());
     }
 
 }

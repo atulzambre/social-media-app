@@ -50,7 +50,7 @@ public class PostModel implements Comparable<PostModel> {
         try {
             TimeUnit.MILLISECONDS.sleep(1);
         } catch (Exception e) {
-                System.out.println(e.getMessage());
+            e.getStackTrace();
         }
         this.postCreated = LocalDateTime.now();
     }

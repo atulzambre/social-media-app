@@ -46,7 +46,7 @@ public class SocialMediaAppControllerTest {
     private UserOperationsService userOperationsService;
 
     @Test
-    public void controllerGetAllUsers_ShouldReturnAllTheUsersFromCollectionTest() throws Exception {
+    public void testControllerGetAllUsers_ShouldReturnAllTheUsersFromCollection() throws Exception {
         UserModel userModel = new UserModel();
         userModel.setUserId("1");
         userModel.setUserName("test");
@@ -57,7 +57,7 @@ public class SocialMediaAppControllerTest {
     }
 
     @Test
-    public void controllerCreateUser_ShouldCreateNewUserTest() throws Exception {
+    public void testControllerCreateUser_ShouldCreateNewUser() throws Exception {
         UserModel userModel = new UserModel();
         userModel.setUserId("1");
         userModel.setUserName("test");
@@ -72,7 +72,7 @@ public class SocialMediaAppControllerTest {
 
 
     @Test
-    public void controllerCreateNewPost_ShouldCreateNewPostTest() throws Exception {
+    public void testControllerCreateNewPost_ShouldCreateNewPost() throws Exception {
         UserModel userModel = new UserModel();
         userModel.setUserId("1");
         userModel.setUserName("test");
@@ -94,7 +94,7 @@ public class SocialMediaAppControllerTest {
     }
 
     @Test
-    public void controllerGetNewsFeed_ShouldReturnPostsOfUserAndFolloweesTest() throws Exception {
+    public void testControllerGetNewsFeed_ShouldReturnTop20Posts() throws Exception {
 
         PostModel postModel = new PostModel();
         postModel.setPostId("1");
@@ -107,7 +107,7 @@ public class SocialMediaAppControllerTest {
     }
 
     @Test
-    public void controllerFollowUser_ShouldFollowUserTest() throws Exception {
+    public void testControllerFollowUser_ShouldFollowUser() throws Exception {
         UserModel userModel = new UserModel();
         userModel.setUserId("1");
         userModel.setUserName("test");
@@ -124,7 +124,7 @@ public class SocialMediaAppControllerTest {
     }
 
     @Test
-    public void controllerUnFollow_ShouldUnfollowUserTest() throws Exception {
+    public void testControllerUnFollowUser_ShouldUnfollowUser() throws Exception {
         UserModel userModel = new UserModel();
         userModel.setUserId("1");
         userModel.setUserName("test");

@@ -31,8 +31,8 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
      * createNewPost method stores the new posts for the user.
      *
      * @param userId      Users unique key
-     * @param postId       Posts Unique Key
-     * @param postContent   Post Message
+     * @param postId      Posts Unique Key
+     * @param postContent Post Message
      * @return User with all its posts.
      */
     @Override
@@ -57,8 +57,8 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     /**
      * follow method stores information about one user following other to get the feeds.
      *
-     * @param followerId    Follower Unique ID
-     * @param followeeId    Followee Unique ID
+     * @param followerId Follower Unique ID
+     * @param followeeId Followee Unique ID
      * @return User with all the followee information.
      */
     @Override
@@ -77,8 +77,8 @@ public class SocialMediaAppServiceImpl implements SocialMediaAppService {
     /**
      * unfollow method removes information about one user following other and should not get the feeds.
      *
-     * @param followerId    Follower Unique ID
-     * @param followeeId    Followee Unique ID
+     * @param followerId Follower Unique ID
+     * @param followeeId Followee Unique ID
      * @return User with all the followee information.
      */
     @Override
